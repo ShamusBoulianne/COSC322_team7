@@ -1,4 +1,4 @@
-
+//test
 package ubc.cosc322;
 
 import java.util.ArrayList;
@@ -48,7 +48,7 @@ public class COSC322Test extends GamePlayer{
     }
 	
     /**
-     * Any name and passwd 
+     * Any name and passwd
      * @param userName
       * @param passwd
      */
