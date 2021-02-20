@@ -80,11 +80,12 @@ public class COSC322Test extends GamePlayer{
     	//see the method GamePlayer.handleGameMessage() in the game-client-api document. 
     	
     	if (GameMessage.GAME_STATE_BOARD.compareTo(messageType)==0) {
-    		System.out.println("game-state:" + displayBoard((ArrayList)msgDetails.get(AmazonsGameMessage.GAME_STATE)));
+    		//System.out.println("game-state:" + displayBoard((ArrayList)msgDetails.get(AmazonsGameMessage.GAME_STATE)));
+    		printBoard(get2x2Board((ArrayList)msgDetails.get(AmazonsGameMessage.GAME_STATE)));
     		gamegui.setGameState((ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.GAME_STATE));
     	}
     	if (GameMessage.GAME_ACTION_START.compareTo(messageType)==0) {
-    		System.out.println("game-state: \n" + displayBoard((ArrayList) msgDetails.get(AmazonsGameMessage.GAME_STATE)));
+    		printBoard((ArrayList) msgDetails.get(AmazonsGameMessage.GAME_STATE));
     		System.out.println("player-black: " + msgDetails.get(AmazonsGameMessage.PLAYER_BLACK));
     		System.out.println("player-white: " + msgDetails.get(AmazonsGameMessage.PLAYER_WHITE));
     	}
@@ -93,11 +94,39 @@ public class COSC322Test extends GamePlayer{
     		System.out.println("queen-pos-next: " + msgDetails.get(AmazonsGameMessage.Queen_POS_NEXT));
     		System.out.println("arrow-pos: " + msgDetails.get(AmazonsGameMessage.ARROW_POS));
     		gamegui.updateGameState(msgDetails);
+
+
     	}
     	return true;   	
     }
 
-    public String displayBoard(ArrayList<Integer> board){
+    public int[][] get2x2Board(ArrayList<Integer> board){
+    	int[][] boardOut = new int[10][10];
+    	int row = 0;
+    	int column = 0;
+    	for(int i=12; i<board.size(); i++){
+    		System.out.print(board.get(i));
+    		boardOut[row][column] = board.get(i);
+    		column = ++column%10;
+    		if((i+1)%11 == 0){
+    			++i;
+    			++row;
+			}
+		}
+    	return boardOut;
+	}
+
+	public void printBoard(int[][] board){
+    	String output = "int array board \n";
+    	for(int r = 0; r<10; ++r){
+    		for(int c = 0; c<10; ++c)
+    			output += board[r][c] + " ";
+    		output += "\n";
+		}
+    	System.out.println(output);
+	}
+
+    public void printBoard(ArrayList<Integer> board){
     	String output = "";
     	int counter = 0;
     	for(int square: board){
@@ -105,7 +134,7 @@ public class COSC322Test extends GamePlayer{
     		if(counter++ % 11 == 0)
     			output += "\n";
 		}
-    	return output;
+    	System.out.println(output);
 	}
     
     @Override
