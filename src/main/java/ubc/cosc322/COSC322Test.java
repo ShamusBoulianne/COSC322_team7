@@ -32,7 +32,7 @@ public class COSC322Test extends GamePlayer{
      * @param args for name and passwd (current, any string would work)
      */
     public static void main(String[] args) {				 
-    	COSC322Test player = new COSC322Test(args[0], args[1]);
+    	COSC322Test player = new COSC322Test("Team07", "11");
     	
     	if(player.getGameGUI() == null) {
     		player.Go();
@@ -80,11 +80,11 @@ public class COSC322Test extends GamePlayer{
     	//see the method GamePlayer.handleGameMessage() in the game-client-api document. 
     	
     	if (GameMessage.GAME_STATE_BOARD.compareTo(messageType)==0) {
-    		System.out.println("game-state:" + msgDetails.get(AmazonsGameMessage.GAME_STATE));
+    		System.out.println("game-state:" + displayBoard((ArrayList)msgDetails.get(AmazonsGameMessage.GAME_STATE)));
     		gamegui.setGameState((ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.GAME_STATE));
     	}
     	if (GameMessage.GAME_ACTION_START.compareTo(messageType)==0) {
-    		System.out.println("game-state: " + msgDetails.get(AmazonsGameMessage.GAME_STATE));
+    		System.out.println("game-state: \n" + displayBoard((ArrayList) msgDetails.get(AmazonsGameMessage.GAME_STATE)));
     		System.out.println("player-black: " + msgDetails.get(AmazonsGameMessage.PLAYER_BLACK));
     		System.out.println("player-white: " + msgDetails.get(AmazonsGameMessage.PLAYER_WHITE));
     	}
@@ -96,7 +96,17 @@ public class COSC322Test extends GamePlayer{
     	}
     	return true;   	
     }
-    
+
+    public String displayBoard(ArrayList<Integer> board){
+    	String output = "";
+    	int counter = 0;
+    	for(int square: board){
+    		output += square + " ";
+    		if(counter++ % 11 == 0)
+    			output += "\n";
+		}
+    	return output;
+	}
     
     @Override
     public String userName() {
