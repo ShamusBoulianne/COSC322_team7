@@ -84,8 +84,10 @@ public class COSC322Test extends GamePlayer{
     	
     	if (GameMessage.GAME_STATE_BOARD.compareTo(messageType)==0) {
     		//System.out.println("game-state:" + displayBoard((ArrayList)msgDetails.get(AmazonsGameMessage.GAME_STATE)));
-    		printBoard(get2x2Board((ArrayList)msgDetails.get(AmazonsGameMessage.GAME_STATE)));
-    		printBoard(getQueenPositions(get2x2Board((ArrayList)msgDetails.get(AmazonsGameMessage.GAME_STATE))));
+			int[][] board = get2x2Board((ArrayList)msgDetails.get(AmazonsGameMessage.GAME_STATE));
+    		printBoard(board);
+    		printBoard(getQueenPositions(board));
+    		printMoves(getPossibleMoves(board));
     		gamegui.setGameState((ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.GAME_STATE));
     	}
     	if (GameMessage.GAME_ACTION_START.compareTo(messageType)==0) {
@@ -119,6 +121,12 @@ public class COSC322Test extends GamePlayer{
 			}
 		}
     	return boardOut;
+	}
+
+	public void printMoves(ArrayList<int[]> moves){
+		for(int[] i: moves){
+			System.out.print(" (" + i[0] + ", " + i[1] + ") ,");
+		}
 	}
 
 	public void printBoard(int[][] board){
@@ -155,19 +163,20 @@ public class COSC322Test extends GamePlayer{
     	return queenPositions;
 	}
 
-	public ArrayList<int[]> getPossibleMoves(int [] queenPos, int[][] board){
+	public ArrayList<int[]> getPossibleMoves(int[][] board){
+    	int[][] queenPos = getQueenPositions(board);
     	ArrayList<int[]> moves = new ArrayList<int[]>();
-    	moves.addAll(getStraightLeftMoves(queenPos, board));
+    	moves.addAll(getStraightLeftMoves(queenPos[3], board));
 
     	return moves;
 	}
 
 	public ArrayList<int[]> getStraightLeftMoves(int[] queenPos, int[][] board){
     	ArrayList<int[]> leftMoves = new ArrayList<int[]>();
-    	for(int i=queenPos[1]-1; i>=0; --i){
-    		if(board[0][i] != 0)
+    	for(int newCol=queenPos[1]-1; newCol>=0; --newCol){
+    		if(board[queenPos[0]][newCol] != 0)
     			break;
-    		int[] move = {queenPos[1], i};
+    		int[] move = {queenPos[0], newCol};
     		leftMoves.add(move);
 		}
     	return leftMoves;
