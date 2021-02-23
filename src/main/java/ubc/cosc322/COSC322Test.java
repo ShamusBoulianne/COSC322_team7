@@ -87,7 +87,7 @@ public class COSC322Test extends GamePlayer{
 			int[][] board = get2x2Board((ArrayList)msgDetails.get(AmazonsGameMessage.GAME_STATE));
     		printBoard(board);
     		printBoard(getQueenPositions(board));
-    		printMoves(getPossibleMoves(board));
+    		printMoves(getPossibleMoves(board, getQueenPositions(board)[1]));
     		gamegui.setGameState((ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.GAME_STATE));
     	}
     	if (GameMessage.GAME_ACTION_START.compareTo(messageType)==0) {
@@ -98,6 +98,24 @@ public class COSC322Test extends GamePlayer{
     			userQueen = 1;
     		else
     			userQueen = 2;
+			int[][] board = get2x2Board((ArrayList)msgDetails.get(AmazonsGameMessage.GAME_STATE));
+
+			ArrayList<Integer> queenCurr = new ArrayList<>();
+			int[] queenToMove = getQueenPositions(board)[1];
+			queenCurr.add(queenToMove[0]);
+			queenCurr.add(queenToMove[1]);
+
+			ArrayList<Integer> toMoveTo = new ArrayList<>();
+			int[] newSpace = getPossibleMoves(board,queenToMove).get(0);
+			toMoveTo.add(newSpace[0]);
+			toMoveTo.add(newSpace[1]);
+
+			ArrayList<Integer> arrowSpot = new ArrayList<>();
+			int[] arrowNew = getPossibleMoves(board, queenToMove).get(1);
+			arrowSpot.add(arrowNew[0]);
+			arrowSpot.add(arrowNew[1]);
+
+			gamegui.updateGameState(queenCurr, toMoveTo, arrowSpot );
     	}
     	if (GameMessage.GAME_ACTION_MOVE.compareTo(messageType)==0) {
     		System.out.println("queen-pos-curr: " + msgDetails.get(AmazonsGameMessage.QUEEN_POS_CURR));
@@ -163,13 +181,13 @@ public class COSC322Test extends GamePlayer{
     	return queenPositions;
 	}
 
-	public ArrayList<int[]> getPossibleMoves(int[][] board){
+	public ArrayList<int[]> getPossibleMoves(int[][] board, int[] queenCurr){
     	int[][] queenPos = getQueenPositions(board);
     	ArrayList<int[]> moves = new ArrayList<int[]>();
-    	moves.addAll(getStraightLeftMoves(queenPos[1], board));
-    	moves.addAll(getStraightRightMoves(queenPos[1], board));
-    	moves.addAll(getStraightUpMoves(queenPos[1], board));
-    	moves.addAll(getStraightDownMoves(queenPos[1], board));
+    	moves.addAll(getStraightLeftMoves(queenCurr, board));
+    	moves.addAll(getStraightRightMoves(queenCurr, board));
+    	moves.addAll(getStraightUpMoves(queenCurr, board));
+    	moves.addAll(getStraightDownMoves(queenCurr, board));
 
     	return moves;
 	}
