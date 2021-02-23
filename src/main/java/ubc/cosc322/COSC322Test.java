@@ -1,6 +1,7 @@
 //test
 package ubc.cosc322;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -152,6 +153,24 @@ public class COSC322Test extends GamePlayer{
     				++queensFound;
 				}
     	return queenPositions;
+	}
+
+	public ArrayList<int[]> getPossibleMoves(int [] queenPos, int[][] board){
+    	ArrayList<int[]> moves = new ArrayList<int[]>();
+    	moves.addAll(getStraightLeftMoves(queenPos, board));
+
+    	return moves;
+	}
+
+	public ArrayList<int[]> getStraightLeftMoves(int[] queenPos, int[][] board){
+    	ArrayList<int[]> leftMoves = new ArrayList<int[]>();
+    	for(int i=queenPos[1]-1; i>=0; --i){
+    		if(board[0][i] != 0)
+    			break;
+    		int[] move = {queenPos[1], i};
+    		leftMoves.add(move);
+		}
+    	return leftMoves;
 	}
     
     @Override
