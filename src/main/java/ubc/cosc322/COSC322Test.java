@@ -166,7 +166,10 @@ public class COSC322Test extends GamePlayer{
 	public ArrayList<int[]> getPossibleMoves(int[][] board){
     	int[][] queenPos = getQueenPositions(board);
     	ArrayList<int[]> moves = new ArrayList<int[]>();
-    	moves.addAll(getStraightLeftMoves(queenPos[3], board));
+    	moves.addAll(getStraightLeftMoves(queenPos[1], board));
+    	moves.addAll(getStraightRightMoves(queenPos[1], board));
+    	moves.addAll(getStraightUpMoves(queenPos[1], board));
+    	moves.addAll(getStraightDownMoves(queenPos[1], board));
 
     	return moves;
 	}
@@ -181,7 +184,40 @@ public class COSC322Test extends GamePlayer{
 		}
     	return leftMoves;
 	}
-    
+
+	public ArrayList<int[]> getStraightRightMoves(int[] queenPos, int[][] board) {
+		ArrayList<int[]> rightMoves = new ArrayList<int[]>();
+		for (int newCol = queenPos[1] + 1; newCol < 10; ++newCol) {
+			if (board[queenPos[0]][newCol] != 0)
+				break;
+			int[] move = {queenPos[0], newCol};
+			rightMoves.add(move);
+		}
+		return rightMoves;
+	}
+
+	public ArrayList<int[]> getStraightUpMoves(int[] queenPos, int[][] board) {
+		ArrayList<int[]> upMoves = new ArrayList<int[]>();
+		for (int newRow = queenPos[0] - 1; newRow >= 0; --newRow) {
+			if (board[newRow][queenPos[1]] != 0)
+				break;
+			int[] move = {newRow, queenPos[1]};
+			upMoves.add(move);
+		}
+		return upMoves;
+	}
+
+	public ArrayList<int[]> getStraightDownMoves(int[] queenPos, int[][] board) {
+		ArrayList<int[]> downMoves = new ArrayList<int[]>();
+		for (int newRow = queenPos[0] + 1; newRow < 10; ++newRow) {
+			if (board[newRow][queenPos[1]] != 0)
+				break;
+			int[] move = {newRow, queenPos[1]};
+			downMoves.add(move);
+		}
+		return downMoves;
+	}
+
     @Override
     public String userName() {
     	return userName;
