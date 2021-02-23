@@ -25,6 +25,8 @@ public class COSC322Test extends GamePlayer{
 	
     private String userName = null;
     private String passwd = null;
+
+    private int userQueen = 1;
  
 	
     /**
@@ -82,20 +84,23 @@ public class COSC322Test extends GamePlayer{
     	if (GameMessage.GAME_STATE_BOARD.compareTo(messageType)==0) {
     		//System.out.println("game-state:" + displayBoard((ArrayList)msgDetails.get(AmazonsGameMessage.GAME_STATE)));
     		printBoard(get2x2Board((ArrayList)msgDetails.get(AmazonsGameMessage.GAME_STATE)));
+    		printBoard(getQueenPositions(get2x2Board((ArrayList)msgDetails.get(AmazonsGameMessage.GAME_STATE))));
     		gamegui.setGameState((ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.GAME_STATE));
     	}
     	if (GameMessage.GAME_ACTION_START.compareTo(messageType)==0) {
     		printBoard((ArrayList) msgDetails.get(AmazonsGameMessage.GAME_STATE));
     		System.out.println("player-black: " + msgDetails.get(AmazonsGameMessage.PLAYER_BLACK));
     		System.out.println("player-white: " + msgDetails.get(AmazonsGameMessage.PLAYER_WHITE));
+    		if(this.userName == msgDetails.get(AmazonsGameMessage.PLAYER_BLACK))
+    			userQueen = 1;
+    		else
+    			userQueen = 2;
     	}
     	if (GameMessage.GAME_ACTION_MOVE.compareTo(messageType)==0) {
     		System.out.println("queen-pos-curr: " + msgDetails.get(AmazonsGameMessage.QUEEN_POS_CURR));
     		System.out.println("queen-pos-next: " + msgDetails.get(AmazonsGameMessage.Queen_POS_NEXT));
     		System.out.println("arrow-pos: " + msgDetails.get(AmazonsGameMessage.ARROW_POS));
     		gamegui.updateGameState(msgDetails);
-
-
     	}
     	return true;   	
     }
@@ -105,7 +110,6 @@ public class COSC322Test extends GamePlayer{
     	int row = 0;
     	int column = 0;
     	for(int i=12; i<board.size(); i++){
-    		System.out.print(board.get(i));
     		boardOut[row][column] = board.get(i);
     		column = ++column%10;
     		if((i+1)%11 == 0){
@@ -117,9 +121,9 @@ public class COSC322Test extends GamePlayer{
 	}
 
 	public void printBoard(int[][] board){
-    	String output = "int array board \n";
-    	for(int r = 0; r<10; ++r){
-    		for(int c = 0; c<10; ++c)
+    	String output = "";
+    	for(int r = 0; r< board.length; ++r){
+    		for(int c = 0; c<board[r].length; ++c)
     			output += board[r][c] + " ";
     		output += "\n";
 		}
@@ -135,6 +139,19 @@ public class COSC322Test extends GamePlayer{
     			output += "\n";
 		}
     	System.out.println(output);
+	}
+
+	public int [][] getQueenPositions(int[][] board){
+    	int[][] queenPositions = new int[4][2];
+    	int queensFound = 0;
+    	for(int r=0; r< board.length; ++r)
+    		for(int c=0; c<board[r].length; ++c)
+    			if(board[r][c] == this.userQueen){
+    				queenPositions[queensFound][0] = r;
+    				queenPositions[queensFound][1] = c;
+    				++queensFound;
+				}
+    	return queenPositions;
 	}
     
     @Override
