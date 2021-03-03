@@ -81,13 +81,13 @@ public class COSC322Test extends GamePlayer{
     	
     	//For a detailed description of the message types and format, 
     	//see the method GamePlayer.handleGameMessage() in the game-client-api document. 
-    	
+    	Board board = new Board();
+
     	if (GameMessage.GAME_STATE_BOARD.compareTo(messageType)==0) {
     		//System.out.println("game-state:" + displayBoard((ArrayList)msgDetails.get(AmazonsGameMessage.GAME_STATE)));
-			int[][] board = get2x2Board((ArrayList)msgDetails.get(AmazonsGameMessage.GAME_STATE));
-    		printBoard(board);
-    		printBoard(getQueenPositions(board));
-    		printMoves(getPossibleMoves(board, getQueenPositions(board)[1]));
+			board.setBoard((ArrayList)msgDetails.get(AmazonsGameMessage.GAME_STATE));
+    		board.printBoard();
+    		//board.printMoves(board.getQueenPositions()[1]);
     		gamegui.setGameState((ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.GAME_STATE));
     	}
     	if (GameMessage.GAME_ACTION_START.compareTo(messageType)==0) {
@@ -95,23 +95,23 @@ public class COSC322Test extends GamePlayer{
     		System.out.println("player-black: " + msgDetails.get(AmazonsGameMessage.PLAYER_BLACK));
     		System.out.println("player-white: " + msgDetails.get(AmazonsGameMessage.PLAYER_WHITE));
     		if(this.userName == msgDetails.get(AmazonsGameMessage.PLAYER_BLACK))
-    			userQueen = 1;
+    			board.setPlayerQueenNum(1);
     		else
-    			userQueen = 2;
-			int[][] board = get2x2Board((ArrayList)msgDetails.get(AmazonsGameMessage.GAME_STATE));
+    			board.setPlayerQueenNum(2);
+    		board.setBoard((ArrayList)msgDetails.get(AmazonsGameMessage.GAME_STATE));
 
 			ArrayList<Integer> queenCurr = new ArrayList<>();
-			int[] queenToMove = getQueenPositions(board)[1];
+			int[] queenToMove = board.getQueenPositions()[1];
 			queenCurr.add(queenToMove[0]);
 			queenCurr.add(queenToMove[1]);
 
 			ArrayList<Integer> toMoveTo = new ArrayList<>();
-			int[] newSpace = getPossibleMoves(board,queenToMove).get(0);
+			int[] newSpace = board.getPossibleMoves(queenToMove).get(0);
 			toMoveTo.add(newSpace[0]);
 			toMoveTo.add(newSpace[1]);
 
 			ArrayList<Integer> arrowSpot = new ArrayList<>();
-			int[] arrowNew = getPossibleMoves(board, queenToMove).get(1);
+			int[] arrowNew = board.getPossibleMoves(queenToMove).get(1);
 			arrowSpot.add(arrowNew[0]);
 			arrowSpot.add(arrowNew[1]);
 
