@@ -120,4 +120,60 @@ public class Board {
         }
         return downMoves;
     }
+
+    public ArrayList<int[]> getDownLeftMoves(int[] queenPos) {
+        ArrayList<int[]> downLeftMoves = new ArrayList<int[]>();
+        //Used to ensure that position moves to the side as much as it does down
+        int leftCount = 1;
+        for (int newRow = queenPos[0] + 1; newRow < 10; ++newRow) {
+            if (board[newRow][queenPos[1]-leftCount] != 0)
+                break;
+            int[] move = {newRow, queenPos[1]-leftCount};
+            downLeftMoves.add(move);
+            leftCount++;
+        }
+        return downLeftMoves;
+    }
+
+    public ArrayList<int[]> getDownRightMoves(int[] queenPos) {
+        ArrayList<int[]> downRightMoves = new ArrayList<int[]>();
+        //Used to ensure that position moves to the side as much as it does down
+        int rightCount = 1;
+        for (int newRow = queenPos[0] + 1; newRow < 10; ++newRow) {
+            if (board[newRow][queenPos[1]+rightCount] != 0)
+                break;
+            int[] move = {newRow, queenPos[1]+rightCount};
+            downRightMoves.add(move);
+            rightCount++;
+        }
+        return downRightMoves;
+    }
+
+    public ArrayList<int[]> getUpLeftMoves(int[] queenPos) {
+        ArrayList<int[]> upLeftMoves = new ArrayList<int[]>();
+        //Used to ensure that position moves to the side as much as it does down
+        int leftCount = 1;
+        for (int newRow = queenPos[0] - 1; newRow >= 0; --newRow) {
+            if (board[newRow][queenPos[1]-leftCount] != 0)
+                break;
+            int[] move = {newRow, queenPos[1]-leftCount};
+            upLeftMoves.add(move);
+            leftCount++;
+        }
+        return upLeftMoves;
+    }
+
+    public ArrayList<int[]> getUpRightMoves(int[] queenPos) {
+        ArrayList<int[]> upRightMoves = new ArrayList<int[]>();
+        //Used to ensure that position moves to the side as much as it does down
+        int rightCount = 1;
+        for (int newRow = queenPos[0] - 1; newRow >= 0; --newRow) {
+            if (board[newRow][queenPos[1]+rightCount] != 0)
+                break;
+            int[] move = {newRow, queenPos[1]+rightCount};
+            upRightMoves.add(move);
+            rightCount++;
+        }
+        return upRightMoves;
+    }
 }
