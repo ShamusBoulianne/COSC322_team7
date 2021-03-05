@@ -69,10 +69,16 @@ public class Board {
     public ArrayList<int[]> getPossibleMoves(int[] queenCurr){
         int[][] queenPos = getQueenPositions();
         ArrayList<int[]> moves = new ArrayList<int[]>();
+        //Straights
         moves.addAll(getStraightLeftMoves(queenCurr));
         moves.addAll(getStraightRightMoves(queenCurr));
         moves.addAll(getStraightUpMoves(queenCurr));
         moves.addAll(getStraightDownMoves(queenCurr));
+        //Diagonals
+        moves.addAll(getDownLeftMoves(queenCurr));
+        moves.addAll(getDownRightMoves(queenCurr));
+        moves.addAll(getUpLeftMoves(queenCurr));
+        moves.addAll(getUpRightMoves(queenCurr));
 
         return moves;
     }
