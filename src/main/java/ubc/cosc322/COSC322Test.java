@@ -1,4 +1,5 @@
 //test
+// We had a group member drop the course on march 8th,
 package ubc.cosc322;
 
 import java.lang.reflect.Array;
@@ -32,7 +33,7 @@ public class COSC322Test extends GamePlayer{
      * @param args for name and passwd (current, any string would work)
      */
     public static void main(String[] args) {				 
-    	GamePlayer player = new COSC322Test("name", "pas");
+    	GamePlayer player = new COSC322Test("Team 07", "pass");
     	
     	if(player.getGameGUI() == null) {
     		player.Go();
@@ -55,16 +56,14 @@ public class COSC322Test extends GamePlayer{
     public COSC322Test(String userName, String passwd) {
     	this.userName = userName;
     	this.passwd = passwd;
-    	
-    	//To make a GUI-based player, create an instance of BaseGameGUI
-    	//and implement the method getGameGUI() accordingly
+
     	this.gamegui = new BaseGameGUI(this);
-    	board = new Board();
-    }
- 
+	board = new Board();
+}
 
 
-    @Override
+
+	@Override
     public void onLogin() {
     	userName = gameClient.getUserName();
     	if(gamegui != null) {
@@ -81,43 +80,32 @@ public class COSC322Test extends GamePlayer{
     	//see the method GamePlayer.handleGameMessage() in the game-client-api document.
 
     	if (GameMessage.GAME_STATE_BOARD.compareTo(messageType)==0) {
-    		//System.out.println("game-state:" + displayBoard((ArrayList)msgDetails.get(AmazonsGameMessage.GAME_STATE)));
 			board.setBoard((ArrayList)msgDetails.get(AmazonsGameMessage.GAME_STATE));
     		board.printBoard();
-    		//board.printMoves(board.getQueenPositions()[1]);
     		gamegui.setGameState((ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.GAME_STATE));
     	}
     	if (GameMessage.GAME_ACTION_START.compareTo(messageType)==0) {
-    		board.printBoard();
     		System.out.println("player-black: " + msgDetails.get(AmazonsGameMessage.PLAYER_BLACK));
     		System.out.println("player-white: " + msgDetails.get(AmazonsGameMessage.PLAYER_WHITE));
     		if(this.userName == msgDetails.get(AmazonsGameMessage.PLAYER_BLACK))
     			board.setPlayerQueenNum(1);
     		else
     			board.setPlayerQueenNum(2);
-
-			ArrayList<Integer> queenCurr = new ArrayList<>();
-			int[] queenToMove = board.getQueenPositions()[1];
-			queenCurr.add(queenToMove[0]);
-			queenCurr.add(queenToMove[1]);
-
-			ArrayList<Integer> toMoveTo = new ArrayList<>();
-			int[] newSpace = board.getPossibleMoves(queenToMove).get(0);
-			toMoveTo.add(newSpace[0]);
-			toMoveTo.add(newSpace[1]);
-
-			ArrayList<Integer> arrowSpot = new ArrayList<>();
-			int[] arrowNew = board.getPossibleMoves(queenToMove).get(1);
-			arrowSpot.add(arrowNew[0]);
-			arrowSpot.add(arrowNew[1]);
-
-			gamegui.updateGameState(queenCurr, toMoveTo, arrowSpot );
+			System.out.println("We go first, making move...");
+			if(board.getPlayerQueenNum() == 1)
+				makeMove();
     	}
     	if (GameMessage.GAME_ACTION_MOVE.compareTo(messageType)==0) {
-    		System.out.println("queen-pos-curr: " + msgDetails.get(AmazonsGameMessage.QUEEN_POS_CURR));
-    		System.out.println("queen-pos-next: " + msgDetails.get(AmazonsGameMessage.Queen_POS_NEXT));
-    		System.out.println("arrow-pos: " + msgDetails.get(AmazonsGameMessage.ARROW_POS));
-    		gamegui.updateGameState(msgDetails);
+    		System.out.println("Opponent Move recieved");
+    		ArrayList<Integer>[] opponentMove = (ArrayList<Integer>[])new ArrayList[3];
+    		opponentMove[0]= (ArrayList)msgDetails.get(AmazonsGameMessage.QUEEN_POS_CURR);
+    		opponentMove[1] = (ArrayList)msgDetails.get(AmazonsGameMessage.Queen_POS_NEXT);
+    		opponentMove[2]= (ArrayList)msgDetails.get(AmazonsGameMessage.ARROW_POS);
+
+    		updateGameState(opponentMove);
+    		makeMove();
+    		System.out.println("Move made");
+    		board.printBoard();
     	}
     	return true;   	
     }
@@ -143,6 +131,18 @@ public class COSC322Test extends GamePlayer{
 	public void connect() {
 		// TODO Auto-generated method stub
     	gameClient = new GameClient(userName, passwd, this);			
+	}
+
+	public void makeMove(){
+    	ArrayList<Integer>[] move = board.pickMove();
+    	updateGameState(move);
+    	gameClient.sendMoveMessage(move[0], move[1], move[2]);
+	}
+
+	public void updateGameState(ArrayList<Integer>[] move){
+		gamegui.updateGameState(move[0], move[1], move[2]);
+		board.updateGameState(move[0], move[1], move[2]);
+		System.out.println("Boards updated...");
 	}
 
  

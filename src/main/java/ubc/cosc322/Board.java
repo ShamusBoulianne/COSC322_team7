@@ -31,6 +31,10 @@ public class Board {
         return this.board;
     }
 
+    public int getPlayerQueenNum(){
+        return playerQueenNum;
+    }
+
     public void setPlayerQueenNum(int num){
         this.playerQueenNum = num;
     }
@@ -119,5 +123,32 @@ public class Board {
             downMoves.add(move);
         }
         return downMoves;
+    }
+
+    public ArrayList<Integer>[] pickMove(){
+        int[] queenCurr = getQueenPositions()[0];
+        int[] queenMove = getPossibleMoves(queenCurr).get(0);
+        int[] arrow = getPossibleMoves(queenMove).get(0);
+
+        ArrayList<Integer>[] move = (ArrayList<Integer>[])new ArrayList[3];
+        move[0] = new ArrayList<Integer>();
+        move[0].add(queenCurr[0]);
+        move[0].add(queenCurr[1]);
+
+        move[1] = new ArrayList<Integer>();
+        move[1].add(queenMove[0]);
+        move[1].add(queenMove[1]);
+
+        move[2] = new ArrayList<Integer>();
+        move[2].add(arrow[0]);
+        move[2].add(arrow[1]);
+
+        return move;
+    }
+
+    public void updateGameState(ArrayList<Integer> queenCurr, ArrayList<Integer> queenMove, ArrayList<Integer> arrow ){
+        board[queenCurr.get(0)][queenCurr.get(1)] = 0;
+        board[queenMove.get(0)][queenMove.get(1)]= this.playerQueenNum;
+        board[arrow.get(0)][arrow.get(1)] = 3;
     }
 }
