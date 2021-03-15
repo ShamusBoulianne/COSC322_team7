@@ -70,9 +70,8 @@ public class Board {
         return queenPositions;
     }
 
-    public ArrayList<int[]> getPossibleMoves(int[] queenCurr){
-        int[][] queenPos = getQueenPositions();
-        ArrayList<int[]> moves = new ArrayList<int[]>();
+    public ArrayList<Move> getPossibleMoves(int[] queenCurr){
+        ArrayList<Move> moves = new ArrayList<>();
         //Straights
         moves.addAll(getStraightLeftMoves(queenCurr));
         moves.addAll(getStraightRightMoves(queenCurr));
@@ -87,100 +86,116 @@ public class Board {
         return moves;
     }
 
-    public ArrayList<int[]> getStraightLeftMoves(int[] queenPos){
-        ArrayList<int[]> leftMoves = new ArrayList<int[]>();
+    public ArrayList<ArrayList<Integer>> getStraightLeftMoves(int[] queenPos){
+        ArrayList<ArrayList<Integer>> leftMoves = new ArrayList<>();
         for(int newCol=queenPos[1]-1; newCol>=0; --newCol){
             if(board[queenPos[0]][newCol] != 0)
                 break;
-            int[] move = {queenPos[0], newCol};
+            ArrayList<Integer> move = new ArrayList<>();
+            move.add(queenPos[0]);
+            move.add(newCol);
             leftMoves.add(move);
         }
         return leftMoves;
     }
 
-    public ArrayList<int[]> getStraightRightMoves(int[] queenPos) {
-        ArrayList<int[]> rightMoves = new ArrayList<int[]>();
+    public ArrayList<ArrayList<Integer>> getStraightRightMoves(int[] queenPos) {
+        ArrayList<ArrayList<Integer>> rightMoves = new ArrayList<>();
         for (int newCol = queenPos[1] + 1; newCol < 10; ++newCol) {
             if (board[queenPos[0]][newCol] != 0)
                 break;
-            int[] move = {queenPos[0], newCol};
+            ArrayList<Integer> move = new ArrayList<>();
+            move.add(queenPos[0]);
+            move.add(newCol);
             rightMoves.add(move);
         }
         return rightMoves;
     }
 
-    public ArrayList<int[]> getStraightUpMoves(int[] queenPos) {
-        ArrayList<int[]> upMoves = new ArrayList<int[]>();
+    public ArrayList<ArrayList<Integer>> getStraightUpMoves(int[] queenPos) {
+        ArrayList<ArrayList<Integer>> upMoves = new ArrayList<>();
         for (int newRow = queenPos[0] - 1; newRow >= 0; --newRow) {
             if (board[newRow][queenPos[1]] != 0)
                 break;
-            int[] move = {newRow, queenPos[1]};
+            ArrayList<Integer> move = new ArrayList<>();
+            move.add(newRow);
+            move.add(queenPos[1]);
             upMoves.add(move);
         }
         return upMoves;
     }
 
-    public ArrayList<int[]> getStraightDownMoves(int[] queenPos) {
-        ArrayList<int[]> downMoves = new ArrayList<int[]>();
+    public ArrayList<ArrayList<Integer>> getStraightDownMoves(int[] queenPos) {
+        ArrayList<ArrayList<Integer>> downMoves = new ArrayList<>();
         for (int newRow = queenPos[0] + 1; newRow < 10; ++newRow) {
             if (board[newRow][queenPos[1]] != 0)
                 break;
-            int[] move = {newRow, queenPos[1]};
+            ArrayList<Integer> move = new ArrayList<>();
+            move.add(newRow);
+            move.add(queenPos[1]);
             downMoves.add(move);
         }
         return downMoves;
     }
 
-    public ArrayList<int[]> getDownLeftMoves(int[] queenPos) {
-        ArrayList<int[]> downLeftMoves = new ArrayList<int[]>();
+    public ArrayList<ArrayList<Integer>> getDownLeftMoves(int[] queenPos) {
+        ArrayList<ArrayList<Integer>> downLeftMoves = new ArrayList<>();
         //Used to ensure that position moves to the side as much as it does down
         int leftCount = 1;
         for (int newRow = queenPos[0] + 1; newRow < 10; ++newRow) {
             if (board[newRow][queenPos[1]-leftCount] != 0)
                 break;
-            int[] move = {newRow, queenPos[1]-leftCount};
+            ArrayList<Integer> move = new ArrayList<>();
+            move.add(newRow);
+            move.add(queenPos[1]-leftCount);
             downLeftMoves.add(move);
             leftCount++;
         }
         return downLeftMoves;
     }
 
-    public ArrayList<int[]> getDownRightMoves(int[] queenPos) {
-        ArrayList<int[]> downRightMoves = new ArrayList<int[]>();
+    public ArrayList<ArrayList<Integer>> getDownRightMoves(int[] queenPos) {
+        ArrayList<ArrayList<Integer>> downRightMoves = new ArrayList<>();
         //Used to ensure that position moves to the side as much as it does down
         int rightCount = 1;
         for (int newRow = queenPos[0] + 1; newRow < 10; ++newRow) {
             if (board[newRow][queenPos[1]+rightCount] != 0)
                 break;
-            int[] move = {newRow, queenPos[1]+rightCount};
+            ArrayList<Integer> move = new ArrayList<>();
+            move.add(newRow);
+            move.add(queenPos[1]+rightCount);
             downRightMoves.add(move);
             rightCount++;
         }
         return downRightMoves;
     }
 
-    public ArrayList<int[]> getUpLeftMoves(int[] queenPos) {
-        ArrayList<int[]> upLeftMoves = new ArrayList<int[]>();
+    public ArrayList<ArrayList<Integer>> getUpLeftMoves(int[] queenPos) {
+        ArrayList<ArrayList<Integer>> upLeftMoves = new ArrayList<>();
         //Used to ensure that position moves to the side as much as it does down
         int leftCount = 1;
         for (int newRow = queenPos[0] - 1; newRow >= 0; --newRow) {
             if (board[newRow][queenPos[1]-leftCount] != 0)
                 break;
-            int[] move = {newRow, queenPos[1]-leftCount};
+            ArrayList<Integer> move = new ArrayList<>();
+            move.add(newRow);
+            move.add(queenPos[1]-leftCount);
             upLeftMoves.add(move);
             leftCount++;
         }
         return upLeftMoves;
     }
 
-    public ArrayList<int[]> getUpRightMoves(int[] queenPos) {
-        ArrayList<int[]> upRightMoves = new ArrayList<int[]>();
+    public ArrayList<ArrayList<Integer>> getUpRightMoves(int[] queenPos) {
+        ArrayList<ArrayList<Integer>> upRightMoves = new ArrayList<>();
         //Used to ensure that position moves to the side as much as it does down
         int rightCount = 1;
         for (int newRow = queenPos[0] - 1; newRow >= 0; --newRow) {
             if (board[newRow][queenPos[1]+rightCount] != 0)
                 break;
-            int[] move = {newRow, queenPos[1]+rightCount};
+            ArrayList<Integer> move = new ArrayList<>();
+            move.add(newRow);
+            move.add(queenPos[1]+rightCount);
             upRightMoves.add(move);
             rightCount++;
         }

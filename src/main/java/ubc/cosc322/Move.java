@@ -4,40 +4,38 @@ import java.util.ArrayList;
 
 public class Move {
 
-    private ArrayList<Integer> queenCurr;
-    private ArrayList<Integer> queenMove;
-    private ArrayList<Integer> arrow;
+    private Coordinate queenCurr;
+    private Coordinate queenMove;
+    private Coordinate arrow;
 
-    public ArrayList<Integer> getQueenCurr() {
+    public Move(Coordinate curr, Coordinate move, Coordinate arrowspot){
+        setQueenCurr(curr);
+        setQueenMove(move);
+        setArrow(arrowspot);
+    }
+
+    public Coordinate getQueenCurr() {
         return queenCurr;
     }
 
-    public void setQueenCurr(ArrayList<Integer> queenCurr) {
-        if(isOnBoard(queenCurr))
+    public void setQueenCurr(Coordinate queenCurr) {
             this.queenCurr = queenCurr;
     }
 
-    public ArrayList<Integer> getQueenMove() {
+    public Coordinate getQueenMove() {
         return queenMove;
     }
 
-    public void setQueenMove(ArrayList<Integer> queenMove) {
-        if(isOnBoard(queenMove))
+    public void setQueenMove(Coordinate queenMove) {
             this.queenMove = queenMove;
     }
 
-    public ArrayList<Integer> getArrow() {
+    public Coordinate getArrow() {
         return arrow;
     }
 
-    public void setArrow(ArrayList<Integer> arrow) {
-        if(isOnBoard(arrow))
+    public void setArrow(Coordinate arrow) {
             this.arrow = arrow;
     }
 
-    private boolean isOnBoard(ArrayList<Integer> space){
-        if(space.get(0)< 0 || space.get(0) > 9 || space.get(1) < 0 || space.get(1) > 9)
-            return false;
-        return true;
-    }
 }
