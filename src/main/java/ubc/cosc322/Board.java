@@ -51,7 +51,7 @@ public class Board {
         System.out.println();
     }
 
-    public void printMoves(Coordinate queenPos){
+    public void printMoves(){
         ArrayList<Move> moves = getPossibleMoves();
         for(Move i: moves){
             System.out.print(i.toString());
@@ -131,7 +131,7 @@ public class Board {
         for (int count = 1; count < 10; ++count) {
             int newY = queenPos.getY()+count;
             int newX = queenPos.getX()-count;
-            if (board[newY][newX] != 0 || newY<0 || newY>9 || newX<0 || newX>9)
+            if (newY<0 || newY>9 || newX<0 || newX>9 || board[newY][newX] != 0)
                 break;
             downLeftMoves.add(new Coordinate(newY, newX));
         }
@@ -143,7 +143,7 @@ public class Board {
         for (int count = 1; count < 10; ++count) {
             int newY = queenPos.getY()+count;
             int newX = queenPos.getX()+count;
-            if (board[newY][newX] != 0 || newY<0 || newY>9 || newX<0 || newX>9)
+            if (newY<0 || newY>9 || newX<0 || newX>9 || board[newY][newX] != 0)
                 break;
             downRightMoves.add(new Coordinate(newY, newX));
         }
@@ -155,7 +155,7 @@ public class Board {
         for (int count = 1; count < 10; ++count) {
             int newY = queenPos.getY()-count;
             int newX = queenPos.getX()-count;
-            if (board[newY][newX] != 0 || newY<0 || newY>9 || newX<0 || newX>9)
+            if (newY<0 || newY>9 || newX<0 || newX>9 || board[newY][newX] != 0)
                 break;
             upLeftMoves.add(new Coordinate(newY, newX));
         }
@@ -167,7 +167,7 @@ public class Board {
         for (int count = 1; count < 10; ++count) {
             int newY = queenPos.getY()-count;
             int newX = queenPos.getX()+count;
-            if (board[newY][newX] != 0 || newY<0 || newY>9 || newX<0 || newX>9)
+            if (newY<0 || newY>9 || newX<0 || newX>9 || board[newY][newX] != 0)
                 break;
             upRightMoves.add(new Coordinate(newY, newX));
         }
@@ -177,9 +177,11 @@ public class Board {
     public ArrayList<Move> getPossibleMoves(){
         ArrayList<Move> moves = new ArrayList();
         for(Coordinate queenCurr: getQueenCoordinates())
-            for(Coordinate queenMove: getReachableCoordinates(queenCurr))
-                for(Coordinate arrow: getReachableCoordinates(queenMove))
+            for (Coordinate queenMove : getReachableCoordinates(queenCurr)) {
+                for (Coordinate arrow : getReachableCoordinates(queenMove))
                     moves.add(new Move(queenCurr, queenMove, arrow));
+            }
+        System.out.println("There are " + moves.size() + " moves from this position");
         return moves;
     }
 

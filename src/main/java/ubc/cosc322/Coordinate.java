@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 // format is (y,x) to make it more similar to the int[][] used for the board
 
-public class Coordinate extends ArrayList {
+public class Coordinate {
     ArrayList<Integer> coordinate;
 
     public Coordinate(int y, int x){

@@ -10,12 +10,6 @@ public class Move {
     private Coordinate arrow;
 
 
-    public Move(Coordinate curr, Coordinate move, Coordinate arrow){
-        setQueenCurr(curr);
-        setQueenMove(move);
-        setArrow(arrow);
-    }
-
     public Move(ArrayList<Integer> curr, ArrayList<Integer> move, ArrayList<Integer> arrow){
         Coordinate queenCurr = new Coordinate(curr.get(1), curr.get(0));
         setQueenCurr(queenCurr);
@@ -24,6 +18,13 @@ public class Move {
         Coordinate arrowSpot = new Coordinate(arrow.get(1), move.get(0));
         setArrow(arrowSpot);
     }
+    public Move(Coordinate curr, Coordinate move, Coordinate arrow){
+        setQueenCurr(curr);
+        setQueenMove(move);
+        setArrow(arrow);
+    }
+
+
 
     public Coordinate getQueenCurr() {
         return queenCurr;
