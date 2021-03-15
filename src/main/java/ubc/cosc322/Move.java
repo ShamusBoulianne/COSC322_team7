@@ -1,6 +1,7 @@
 package ubc.cosc322;
 
 import java.util.ArrayList;
+// A set of the Coordinates required to send a move to the server
 
 public class Move {
 
@@ -8,10 +9,20 @@ public class Move {
     private Coordinate queenMove;
     private Coordinate arrow;
 
-    public Move(Coordinate curr, Coordinate move, Coordinate arrowspot){
+
+    public Move(Coordinate curr, Coordinate move, Coordinate arrow){
         setQueenCurr(curr);
         setQueenMove(move);
-        setArrow(arrowspot);
+        setArrow(arrow);
+    }
+
+    public Move(ArrayList<Integer> curr, ArrayList<Integer> move, ArrayList<Integer> arrow){
+        Coordinate queenCurr = new Coordinate(curr.get(1), curr.get(0));
+        setQueenCurr(queenCurr);
+        Coordinate queenMove = new Coordinate(move.get(1), move.get(0));
+        setQueenMove(queenMove);
+        Coordinate arrowSpot = new Coordinate(arrow.get(1), move.get(0));
+        setArrow(arrowSpot);
     }
 
     public Coordinate getQueenCurr() {
@@ -38,4 +49,8 @@ public class Move {
             this.arrow = arrow;
     }
 
+    public String toString(){
+        return "  (queenCurr: " + this.queenCurr.toString() + " , queenMove: " + this.queenMove.toString()
+                + " , arrow: " + this.arrow.toString() + ")  ";
+    }
 }

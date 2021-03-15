@@ -97,10 +97,9 @@ public class COSC322Test extends GamePlayer{
     	}
     	if (GameMessage.GAME_ACTION_MOVE.compareTo(messageType)==0) {
     		System.out.println("Opponent Move recieved");
-    		ArrayList<Integer>[] opponentMove = (ArrayList<Integer>[])new ArrayList[3];
-    		opponentMove[0]= (ArrayList)msgDetails.get(AmazonsGameMessage.QUEEN_POS_CURR);
-    		opponentMove[1] = (ArrayList)msgDetails.get(AmazonsGameMessage.Queen_POS_NEXT);
-    		opponentMove[2]= (ArrayList)msgDetails.get(AmazonsGameMessage.ARROW_POS);
+    		Move opponentMove = new Move((ArrayList)msgDetails.get(AmazonsGameMessage.QUEEN_POS_CURR),
+										 (ArrayList)msgDetails.get(AmazonsGameMessage.Queen_POS_NEXT),
+										 (ArrayList)msgDetails.get(AmazonsGameMessage.ARROW_POS));
 
     		updateGameState(opponentMove);
     		makeMove();
@@ -134,14 +133,14 @@ public class COSC322Test extends GamePlayer{
 	}
 
 	public void makeMove(){
-    	ArrayList<Integer>[] move = board.pickMove();
+    	Move move = board.pickMove();
     	updateGameState(move);
-    	gameClient.sendMoveMessage(move[0], move[1], move[2]);
+    	gameClient.sendMoveMessage(move.getQueenCurr().getArrayList(), move.getQueenMove().getArrayList(), move.getArrow().getArrayList());
 	}
 
-	public void updateGameState(ArrayList<Integer>[] move){
-		gamegui.updateGameState(move[0], move[1], move[2]);
-		board.updateGameState(move[0], move[1], move[2]);
+	public void updateGameState(Move move){
+		gamegui.updateGameState(move.getQueenCurr().getArrayList(), move.getQueenMove().getArrayList(), move.getArrow().getArrayList());
+		board.updateGameState(move);
 		System.out.println("Boards updated...");
 	}
 
