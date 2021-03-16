@@ -10,4 +10,14 @@ public class GameTree {
         this.maxDepthToSearch = maxDepthToSearch;
         this.playerQueenNum = playerQueenNum;
     }
+
+    public void populateTree(){
+        this.root.makeChildren();
+    }
+
+    public Move getBestMove(){
+        GTNode bestChild = this.root.getChildren().poll();
+        this.root = bestChild;
+        return bestChild.getMoveToGetHere();
+    }
 }

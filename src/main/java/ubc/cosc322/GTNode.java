@@ -24,6 +24,8 @@ public class GTNode implements Comparable<GTNode>{
 
         this.heuristic = this.board.getHeuristic();
         this.depth = this.parent.getDepth() + 1;
+
+        this.makeChildren();
     }
 
     public double getHeuristic() {
