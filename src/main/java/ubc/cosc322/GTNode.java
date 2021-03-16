@@ -16,7 +16,7 @@ public class GTNode implements Comparable<GTNode>{
         this.parent = parent;
         this.moveToGetHere = moveToGetHere;
 
-        this.playerQueenNum = (this.parent.getBoard().getPlayerQueenNum()+1) %2;
+        this.playerQueenNum = ((this.parent.getBoard().getPlayerQueenNum()-1) %2) +1;
 
         this.board = new Board();
         this.board.setBoard(this.parent.getBoard().getBoard());
