@@ -28,6 +28,12 @@ public class Board {
         }
     }
 
+    public void setBoard(int[][] board){
+        for(int y=0; y< board.length; ++y)
+            for(int x=0; x<board[y].length; ++x)
+                this.board[y][x] = board[y][x];
+    }
+
     public int[][] getBoard(){
         return this.board;
     }
@@ -193,4 +199,12 @@ public class Board {
         board[move.getQueenCurr().getY()][move.getQueenCurr().getX()] = 0;
         board[move.getQueenMove().getY()][move.getQueenMove().getY()]= this.playerQueenNum;
         board[move.getArrow().getY()][move.getArrow().getX()] = 3;}
+
+    public double getHeuristic(){
+        // Fill this out with a heusistic for the board.
+        // Please make it always return from player1's point of view
+        // You can assume playerQueenNum moves next
+
+        return Math.random();
+    }
 }

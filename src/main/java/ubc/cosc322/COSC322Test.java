@@ -26,6 +26,7 @@ public class COSC322Test extends GamePlayer{
     private String passwd = null;
 
     private Board board;
+    private GameTree gametree;
  
 	
     /**
