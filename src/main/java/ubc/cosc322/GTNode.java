@@ -1,5 +1,6 @@
 package ubc.cosc322;
 
+import java.util.ArrayList;
 import java.util.PriorityQueue;
 
 public class GTNode implements Comparable<GTNode>{
@@ -26,6 +27,15 @@ public class GTNode implements Comparable<GTNode>{
         this.depth = this.parent.getDepth() + 1;
 
         this.makeChildren();
+    }
+
+    public GTNode(Board board){
+        //used to create the root
+
+        this.board = new Board();
+        this.board.setBoard(board.getBoard());
+        this.depth = 0;
+        this.playerQueenNum = this.board.getPlayerQueenNum();
     }
 
     public double getHeuristic() {
@@ -57,8 +67,10 @@ public class GTNode implements Comparable<GTNode>{
     }
 
     public void makeChildren(){
-        if(this.depth<2)
-            for(Move move: this.board.getPossibleMoves())
+        this.children = new PriorityQueue<>();
+        ArrayList<Move> makeableMoves = this.board.getPossibleMoves();
+        if(this.depth<1)
+            for(Move move: makeableMoves)
                 this.children.add(new GTNode(this, move));
     }
 

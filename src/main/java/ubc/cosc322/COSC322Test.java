@@ -84,7 +84,7 @@ public class COSC322Test extends GamePlayer{
 			board.setBoard((ArrayList)msgDetails.get(AmazonsGameMessage.GAME_STATE));
     		board.printBoard();
     		gamegui.setGameState((ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.GAME_STATE));
-    		board.printMoves();
+    		makeMove();
     	}
     	if (GameMessage.GAME_ACTION_START.compareTo(messageType)==0) {
     		System.out.println("player-black: " + msgDetails.get(AmazonsGameMessage.PLAYER_BLACK));
@@ -135,11 +135,14 @@ public class COSC322Test extends GamePlayer{
 	}
 
 	public void makeMove(){
-    	Move move = board.pickMove();
+    	gametree = new GameTree(new GTNode(board), 2, board.getPlayerQueenNum());
+    	gametree.populateTree();
+    	Move move = gametree.getBestMove();
     	updateGameState(move);
     	gameClient.sendMoveMessage(move.getQueenCurr().getArrayList(),
 				    		       move.getQueenMove().getArrayList(),
 								   move.getArrow().getArrayList()       );
+    	System.out.println("The move made was " + move.toString());
 	}
 
 	public void updateGameState(Move move){

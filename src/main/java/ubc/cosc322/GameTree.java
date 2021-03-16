@@ -18,6 +18,8 @@ public class GameTree {
     public Move getBestMove(){
         GTNode bestChild = this.root.getChildren().poll();
         this.root = bestChild;
+
+        System.out.println("The heuristic of bestChild is " + bestChild.getHeuristic());
         return bestChild.getMoveToGetHere();
     }
 }
