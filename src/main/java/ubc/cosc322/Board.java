@@ -200,11 +200,244 @@ public class Board {
         board[move.getQueenMove().getY()][move.getQueenMove().getY()]= this.playerQueenNum;
         board[move.getArrow().getY()][move.getArrow().getX()] = 3;}
 
-    public double getHeuristic(){
+    public double getHeuristic(Coordinate currentPos, Coordinate newPos, Coordinate arrowPos, int playerQueenNum){
         // Fill this out with a heusistic for the board.
         // Please make it always return from player1's point of view
         // You can assume playerQueenNum moves next
 
-        return Math.random();
+        double moveValue = 0;
+        int xNewPos = newPos.getX();
+        int yNewPos = newPos.getY();
+        int xOldPos = currentPos.getX();
+        int yOldPos = currentPos.getY();
+
+        // See if moving closer or further from placed arrows
+        if(playerQueenNum == 1){
+            moveValue += getNearestArrowDistance(newPos)-getNearestArrowDistance(currentPos);
+            moveValue += checkSurroundings(newPos, playerQueenNum) - checkSurroundings(currentPos, playerQueenNum);
+        }
+        else {
+            moveValue -= getNearestArrowDistance(newPos)-getNearestArrowDistance(currentPos);
+            moveValue -= checkSurroundings(newPos, playerQueenNum) - checkSurroundings(currentPos, playerQueenNum);
+        }
+
+
+        return moveValue;
+    }
+
+    // Method to turn arrow coordinates back into the absolute distance
+    public double getNearestArrowDistance(Coordinate queenPos){
+        Coordinate arrowPos = getNearestArrowPosition(queenPos);
+        int xdif = Math.abs(arrowPos.getX()-queenPos.getX());
+        int ydif = Math.abs(arrowPos.getY()-queenPos.getY());
+        if (xdif == 0 && ydif == 0)
+            return 0;
+        return Math.sqrt((xdif*xdif)+(ydif*ydif));
+    }
+
+    // Method for determining Coordinates of arrow
+    public Coordinate getNearestArrowPosition(Coordinate queenPos){
+        double distanceToArrow = 100;
+        Coordinate arrowPos = queenPos;
+
+        // Run through all Y rows
+        for (int y = 0; y<10; y++){
+            // Run through all X columns
+            for (int x = 0; x<10; x++){
+                if (board[y][x] == 3){
+                    int xdif = Math.abs(x-queenPos.getX());
+                    int ydif = Math.abs(y-queenPos.getY());
+                    // Determine absolute distance
+                    double newDistance = Math.sqrt((xdif*xdif)+(ydif*ydif));
+                    if (newDistance < distanceToArrow) {
+                        distanceToArrow = newDistance;
+                        arrowPos = new Coordinate(y,x);
+                    }
+                }
+            }
+        }
+        return arrowPos;
+    }
+
+    // Method for determining how surrounded the queen is or will be
+    public int checkSurroundings(Coordinate queenPos, int playerQueenNum){
+        int totalValue = 0;
+        int xPos = queenPos.getX();
+        int yPos = queenPos.getY();
+
+        // If not along an edge
+        if(yPos < 9 && yPos > 0 && xPos < 9 && xPos >0){
+            for(int a = 0; a < 3; a++){
+                // Don't want to move all queens into the same spot
+                if (board[yPos+1][(xPos-1)+a] == playerQueenNum)
+                    totalValue -= 2;
+                else if (board[yPos+1][(xPos-1)+a] != 0)
+                    totalValue -=1;
+                // Space is clear
+                else
+                    totalValue +=1;
+            }
+            for (int a = 0; a < 3; a++){
+                // Ignore current position
+                if (a == 1)
+                    continue;
+
+                // Don't want to move all queens into the same spot
+                if (board[yPos][(xPos-1)+a] == playerQueenNum)
+                    totalValue -= 2;
+                else if (board[yPos][(xPos-1)+a] != 0)
+                    totalValue -=1;
+                    // Space is clear
+                else
+                    totalValue +=1;
+            }
+            for (int a = 0; a < 3; a++){
+                // Don't want to move all queens into the same spot
+                if(board[yPos-1][(xPos-1)+a] == playerQueenNum)
+                    totalValue -= 2;
+                else if (board[yPos-1][(xPos-1)+a] != 0)
+                    totalValue -=1;
+                    // Space is clear
+                else
+                    totalValue +=1;
+            }
+        }
+        // If along the upper edge
+        else if (yPos == 9 && xPos < 9 && xPos >0){
+            // Account for missing spaces
+            totalValue -= 3;
+            for (int a = 0; a < 3; a++){
+                // Ignore current position
+                if (a == 1)
+                    continue;
+
+                // Don't want to move all queens into the same spot
+                if (board[yPos][(xPos-1)+a] == playerQueenNum)
+                    totalValue -= 2;
+                else if (board[yPos][(xPos-1)+a] != 0)
+                    totalValue -=1;
+                    // Space is clear
+                else
+                    totalValue +=1;
+            }
+            for (int a = 0; a < 3; a++){
+                // Don't want to move all queens into the same spot
+                if(board[yPos-1][(xPos-1)+a] == playerQueenNum)
+                    totalValue -= 2;
+                else if (board[yPos-1][(xPos-1)+a] != 0)
+                    totalValue -=1;
+                    // Space is clear
+                else
+                    totalValue +=1;
+            }
+        }
+        // If along the lower edge
+        else if (yPos == 0 && xPos < 9 && xPos >0){
+            // Account for missing spaces
+            totalValue -= 3;
+            for (int a = 0; a < 3; a++){
+                // Ignore current position
+                if (a == 1)
+                    continue;
+
+                // Don't want to move all queens into the same spot
+                if (board[yPos][(xPos-1)+a] == playerQueenNum)
+                    totalValue -= 2;
+                else if (board[yPos][(xPos-1)+a] != 0)
+                    totalValue -=1;
+                    // Space is clear
+                else
+                    totalValue +=1;
+            }
+            for (int a = 0; a < 3; a++){
+                // Don't want to move all queens into the same spot
+                if(board[yPos+1][(xPos-1)+a] == playerQueenNum)
+                    totalValue -= 2;
+                else if (board[yPos+1][(xPos-1)+a] != 0)
+                    totalValue -=1;
+                    // Space is clear
+                else
+                    totalValue +=1;
+            }
+        }
+        // If along the right edge
+        else if(yPos < 9 && yPos > 0 && xPos == 9){
+            for(int a = 0; a < 2; a++){
+                // Don't want to move all queens into the same spot
+                if (board[yPos+1][(xPos-1)+a] == playerQueenNum)
+                    totalValue -= 2;
+                else if (board[yPos+1][(xPos-1)+a] != 0)
+                    totalValue -=1;
+                    // Space is clear
+                else
+                    totalValue +=1;
+            }
+            for (int a = 0; a < 2; a++){
+                // Ignore current position
+                if (a == 1)
+                    continue;
+
+                // Don't want to move all queens into the same spot
+                if (board[yPos][(xPos-1)+a] == playerQueenNum)
+                    totalValue -= 2;
+                else if (board[yPos][(xPos-1)+a] != 0)
+                    totalValue -=1;
+                    // Space is clear
+                else
+                    totalValue +=1;
+            }
+            for (int a = 0; a < 2; a++){
+                // Don't want to move all queens into the same spot
+                if(board[yPos-1][(xPos-1)+a] == playerQueenNum)
+                    totalValue -= 2;
+                else if (board[yPos-1][(xPos-1)+a] != 0)
+                    totalValue -=1;
+                    // Space is clear
+                else
+                    totalValue +=1;
+            }
+        }
+        // If along the left edge
+        else if(yPos < 9 && yPos > 0 && xPos < 9 && xPos >0){
+            for(int a = 0; a < 2; a++){
+                // Don't want to move all queens into the same spot
+                if (board[yPos+1][(xPos)+a] == playerQueenNum)
+                    totalValue -= 2;
+                else if (board[yPos+1][(xPos-1)+a] != 0)
+                    totalValue -=1;
+                    // Space is clear
+                else
+                    totalValue +=1;
+            }
+            for (int a = 0; a < 2; a++){
+                // Ignore current position
+                if (a == 0)
+                    continue;
+
+                // Don't want to move all queens into the same spot
+                if (board[yPos][(xPos)+a] == playerQueenNum)
+                    totalValue -= 2;
+                else if (board[yPos][(xPos)+a] != 0)
+                    totalValue -=1;
+                    // Space is clear
+                else
+                    totalValue +=1;
+            }
+            for (int a = 0; a < 2; a++){
+                // Don't want to move all queens into the same spot
+                if(board[yPos-1][(xPos)+a] == playerQueenNum)
+                    totalValue -= 2;
+                else if (board[yPos-1][(xPos)+a] != 0)
+                    totalValue -=1;
+                    // Space is clear
+                else
+                    totalValue +=1;
+            }
+        }
+        // Avoid corners, they restrict movement significantly
+        else
+            totalValue -= 7;
+
+        return totalValue;
     }
 }
