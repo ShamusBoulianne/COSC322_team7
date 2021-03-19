@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.PriorityQueue;
 
 public class GTNode implements Comparable<GTNode>{
-    private final int maxDepth = 1;
+    private final int maxDepth = 2;
     private double heuristic;
     private Board board;
     private Move moveToGetHere;
@@ -17,7 +17,7 @@ public class GTNode implements Comparable<GTNode>{
         this.parent = parent;
         this.moveToGetHere = moveToGetHere;
 
-        this.playerQueenNum = ((this.parent.getBoard().getPlayerQueenNum()-1) %2) +1;
+        this.playerQueenNum = ((this.parent.getBoard().getPlayerQueenNum()) %2) +1;
 
         this.heuristic = parent.board.getHeuristic(moveToGetHere, playerQueenNum);
         this.depth = this.parent.getDepth() + 1;
@@ -100,6 +100,8 @@ public class GTNode implements Comparable<GTNode>{
     }
 
     public String toString(){
+        if(moveToGetHere == null)
+            return "Root node";
         return "Node created: Depth:" + this.getDepth() + "  Move to get here:" + this.moveToGetHere.toString() + "  Heuristic:" + this.getHeuristic();
     }
 

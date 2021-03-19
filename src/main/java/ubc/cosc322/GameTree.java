@@ -22,4 +22,13 @@ public class GameTree {
         System.out.println("The heuristic of bestChild is " + bestChild.getHeuristic());
         return bestChild.getMoveToGetHere();
     }
+
+    public void displayFirstMoves(){
+        GTNode lookAt = root;
+        System.out.println(lookAt.toString());
+        while(lookAt.getChildren()!= null){
+            lookAt = lookAt.getChildren().peek();
+            System.out.println(lookAt.toString());
+        }
+    }
 }

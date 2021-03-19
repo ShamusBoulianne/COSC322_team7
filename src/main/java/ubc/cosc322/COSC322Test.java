@@ -83,7 +83,7 @@ public class COSC322Test extends GamePlayer{
     	if (GameMessage.GAME_STATE_BOARD.compareTo(messageType)==0) {
 			board.setBoard((ArrayList)msgDetails.get(AmazonsGameMessage.GAME_STATE));
     		board.printBoard();
-    		board.setPlayerQueenNum(2);
+    		board.setPlayerQueenNum(2);// Set player num as the opposite of what we are. this board becomes the root and we assume they just moved.
     		gamegui.setGameState((ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.GAME_STATE));
     		makeMove();
     	}
@@ -91,11 +91,11 @@ public class COSC322Test extends GamePlayer{
     		System.out.println("player-black: " + msgDetails.get(AmazonsGameMessage.PLAYER_BLACK));
     		System.out.println("player-white: " + msgDetails.get(AmazonsGameMessage.PLAYER_WHITE));
     		if(this.userName == msgDetails.get(AmazonsGameMessage.PLAYER_BLACK))
-    			board.setPlayerQueenNum(1);
-    		else
     			board.setPlayerQueenNum(2);
+    		else
+    			board.setPlayerQueenNum(1);
 			System.out.println("We go first, making move...");
-			if(board.getPlayerQueenNum() == 1)
+			if(board.getPlayerQueenNum() == 2)
 				makeMove();
     	}
     	if (GameMessage.GAME_ACTION_MOVE.compareTo(messageType)==0) {
@@ -138,6 +138,7 @@ public class COSC322Test extends GamePlayer{
 	public void makeMove(){
     	gametree = new GameTree(new GTNode(board), 2, board.getPlayerQueenNum());
     	gametree.populateTree();
+    	gametree.displayFirstMoves();
     	Move move = gametree.getBestMove();
     	updateGameState(move);
     	gameClient.sendMoveMessage(move.getQueenCurr().getArrayList(),
