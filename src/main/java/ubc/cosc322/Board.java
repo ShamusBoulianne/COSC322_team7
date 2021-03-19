@@ -198,27 +198,27 @@ public class Board {
     public void updateGameState(Move move){
         board[move.getQueenCurr().getY()][move.getQueenCurr().getX()] = 0;
         board[move.getQueenMove().getY()][move.getQueenMove().getY()]= this.playerQueenNum;
-        board[move.getArrow().getY()][move.getArrow().getX()] = 3;}
+        board[move.getArrow().getY()][move.getArrow().getX()] = 3;
+    }
+
+    // NOTE: Consider moving heuristic calculations to its own class
 
     public double getHeuristic(Coordinate currentPos, Coordinate newPos, Coordinate arrowPos, int playerQueenNum){
-        // Fill this out with a heusistic for the board.
-        // Please make it always return from player1's point of view
-        // You can assume playerQueenNum moves next
-
+        // Total value of the move
+        // Positive is good for player 1, negative is good for player 2
+        // The reasoning for the positive/negative decision is described in GTNode.java
         double moveValue = 0;
-        int xNewPos = newPos.getX();
-        int yNewPos = newPos.getY();
-        int xOldPos = currentPos.getX();
-        int yOldPos = currentPos.getY();
 
         // See if moving closer or further from placed arrows
         if(playerQueenNum == 1){
             moveValue += getNearestArrowDistance(newPos)-getNearestArrowDistance(currentPos);
             moveValue += checkSurroundings(newPos, playerQueenNum) - checkSurroundings(currentPos, playerQueenNum);
+            moveValue += arrowAiming(arrowPos, playerQueenNum);
         }
         else {
             moveValue -= getNearestArrowDistance(newPos)-getNearestArrowDistance(currentPos);
             moveValue -= checkSurroundings(newPos, playerQueenNum) - checkSurroundings(currentPos, playerQueenNum);
+            moveValue -= arrowAiming(arrowPos, playerQueenNum);
         }
 
 
@@ -257,6 +257,45 @@ public class Board {
             }
         }
         return arrowPos;
+    }
+
+    // Method for determining value of an arrow placement
+    public double arrowAiming(Coordinate arrowPos, int playerQueenNum){
+        double distanceToQueen = 100;
+        int queenTeam = playerQueenNum;
+
+        // Run through all Y rows
+        for (int y = 0; y<10; y++){
+            // Run through all X columns
+            for (int x = 0; x<10; x++){
+                // Check if any queen is on the space, the computer will then determine if that's good or bad
+                if (board[y][x] == 1 || board[y][x] == 2){
+                    // Determine which team is on the space
+                    int queenCheck = board[y][x]; 
+                    int xdif = Math.abs(x-arrowPos.getX());
+                    int ydif = Math.abs(y-arrowPos.getY());
+                    // Determine absolute distance
+                    double aimDistance = Math.sqrt((xdif*xdif)+(ydif*ydif));
+                    // If two queens are the same distance from the arrow, focus on the queen on the player's team
+                    if (aimDistance <= distanceToQueen && queenCheck == playerQueenNum) {
+                        queenTeam = playerQueenNum;
+                        distanceToQueen = aimDistance;
+                    }
+                    else if (aimDistance < distanceToQueen && queenCheck != playerQueenNum){
+                        queenTeam = queenCheck;
+                        distanceToQueen = aimDistance;
+                    }
+                }
+            }
+        }
+
+        // The move is poor if the arrow is placed close to a friendly queen
+        if (queenTeam == playerQueenNum){
+            distanceToQueen = distanceToQueen * -1;
+        }
+
+        // Simple equation so that the value of placing an arrow closer to a queen is greater magnitude
+        return 10/distanceToQueen;
     }
 
     // Method for determining how surrounded the queen is or will be
