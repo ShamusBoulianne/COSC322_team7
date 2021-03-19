@@ -23,7 +23,7 @@ public class GTNode implements Comparable<GTNode>{
         this.board.setPlayerQueenNum(this.playerQueenNum);
         this.board.updateGameState(moveToGetHere);
 
-        this.heuristic = this.board.getHeuristic(moveToGetHere.getQueenCurr(), moveToGetHere.getQueenMove(), moveToGetHere.getArrow(), playerQueenNum);
+        this.heuristic = this.board.getHeuristic(moveToGetHere, playerQueenNum);
         this.depth = this.parent.getDepth() + 1;
 
         this.makeChildren();

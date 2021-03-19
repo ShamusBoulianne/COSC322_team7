@@ -92,7 +92,7 @@ public class Board {
         return moves;
     }
 
-    public ArrayList<Coordinate> getStraightLeftCoordinates(Coordinate queenPos){
+    private ArrayList<Coordinate> getStraightLeftCoordinates(Coordinate queenPos){
         ArrayList<Coordinate> leftMoves = new ArrayList<>();
         for(int newX=queenPos.getX()-1; newX>=0; --newX){
             if(board[queenPos.getY()][newX] != 0)
@@ -102,7 +102,7 @@ public class Board {
         return leftMoves;
     }
 
-    public ArrayList<Coordinate> getStraightRightCoordinates(Coordinate queenPos) {
+    private ArrayList<Coordinate> getStraightRightCoordinates(Coordinate queenPos) {
         ArrayList<Coordinate> rightMoves = new ArrayList<>();
         for (int newX = queenPos.getX() + 1; newX < 10; ++newX) {
             if (board[queenPos.getY()][newX] != 0)
@@ -112,7 +112,7 @@ public class Board {
         return rightMoves;
     }
 
-    public ArrayList<Coordinate> getStraightUpCoordinates(Coordinate queenPos) {
+    private ArrayList<Coordinate> getStraightUpCoordinates(Coordinate queenPos) {
         ArrayList<Coordinate> upMoves = new ArrayList<>();
         for (int newY = queenPos.getY() - 1; newY >= 0; --newY) {
             if (board[newY][queenPos.getX()] != 0)
@@ -122,7 +122,7 @@ public class Board {
         return upMoves;
     }
 
-    public ArrayList<Coordinate> getStraightDownCoordinates(Coordinate queenPos) {
+    private ArrayList<Coordinate> getStraightDownCoordinates(Coordinate queenPos) {
         ArrayList<Coordinate> downMoves = new ArrayList<>();
         for (int newY = queenPos.getY() + 1; newY < 10; ++newY) {
             if (board[newY][queenPos.getX()] != 0)
@@ -132,7 +132,7 @@ public class Board {
         return downMoves;
     }
 
-    public ArrayList<Coordinate> getDownLeftCoordinates(Coordinate queenPos) {
+    private ArrayList<Coordinate> getDownLeftCoordinates(Coordinate queenPos) {
         ArrayList<Coordinate> downLeftMoves = new ArrayList<>();
         for (int count = 1; count < 10; ++count) {
             int newY = queenPos.getY()+count;
@@ -144,7 +144,7 @@ public class Board {
         return downLeftMoves;
     }
 
-    public ArrayList<Coordinate> getDownRightCoordinates(Coordinate queenPos) {
+    private ArrayList<Coordinate> getDownRightCoordinates(Coordinate queenPos) {
         ArrayList<Coordinate> downRightMoves = new ArrayList<>();
         for (int count = 1; count < 10; ++count) {
             int newY = queenPos.getY()+count;
@@ -156,7 +156,7 @@ public class Board {
         return downRightMoves;
     }
 
-    public ArrayList<Coordinate> getUpLeftCoordinates(Coordinate queenPos) {
+    private ArrayList<Coordinate> getUpLeftCoordinates(Coordinate queenPos) {
         ArrayList<Coordinate> upLeftMoves = new ArrayList<>();
         for (int count = 1; count < 10; ++count) {
             int newY = queenPos.getY()-count;
@@ -168,7 +168,7 @@ public class Board {
         return upLeftMoves;
     }
 
-    public ArrayList<Coordinate> getUpRightCoordinates(Coordinate queenPos) {
+    private ArrayList<Coordinate> getUpRightCoordinates(Coordinate queenPos) {
         ArrayList<Coordinate> upRightMoves = new ArrayList<>();
         for (int count = 1; count < 10; ++count) {
             int newY = queenPos.getY()-count;
@@ -191,10 +191,6 @@ public class Board {
         return moves;
     }
 
-    public Move pickMove(){
-        return getPossibleMoves().get(0);
-    }
-
     public void updateGameState(Move move){
         board[move.getQueenCurr().getY()][move.getQueenCurr().getX()] = 0;
         board[move.getQueenMove().getY()][move.getQueenMove().getY()]= this.playerQueenNum;
@@ -203,7 +199,10 @@ public class Board {
 
     // NOTE: Consider moving heuristic calculations to its own class
 
-    public double getHeuristic(Coordinate currentPos, Coordinate newPos, Coordinate arrowPos, int playerQueenNum){
+    public double getHeuristic(Move moveMade, int playerQueenNum){
+        Coordinate currentPos = moveMade.getQueenCurr();
+        Coordinate newPos = moveMade.getQueenMove();
+        Coordinate arrowPos = moveMade.getArrow();
         // Total value of the move
         // Positive is good for player 1, negative is good for player 2
         // The reasoning for the positive/negative decision is described in GTNode.java
@@ -226,7 +225,7 @@ public class Board {
     }
 
     // Method to turn arrow coordinates back into the absolute distance
-    public double getNearestArrowDistance(Coordinate queenPos){
+    private double getNearestArrowDistance(Coordinate queenPos){
         Coordinate arrowPos = getNearestArrowPosition(queenPos);
         int xdif = Math.abs(arrowPos.getX()-queenPos.getX());
         int ydif = Math.abs(arrowPos.getY()-queenPos.getY());
@@ -236,7 +235,7 @@ public class Board {
     }
 
     // Method for determining Coordinates of arrow
-    public Coordinate getNearestArrowPosition(Coordinate queenPos){
+    private Coordinate getNearestArrowPosition(Coordinate queenPos){
         double distanceToArrow = 100;
         Coordinate arrowPos = queenPos;
 
@@ -260,7 +259,7 @@ public class Board {
     }
 
     // Method for determining value of an arrow placement
-    public double arrowAiming(Coordinate arrowPos, int playerQueenNum){
+    private double arrowAiming(Coordinate arrowPos, int playerQueenNum){
         double distanceToQueen = 100;
         int queenTeam = playerQueenNum;
 
@@ -271,7 +270,7 @@ public class Board {
                 // Check if any queen is on the space, the computer will then determine if that's good or bad
                 if (board[y][x] == 1 || board[y][x] == 2){
                     // Determine which team is on the space
-                    int queenCheck = board[y][x]; 
+                    int queenCheck = board[y][x];
                     int xdif = Math.abs(x-arrowPos.getX());
                     int ydif = Math.abs(y-arrowPos.getY());
                     // Determine absolute distance
@@ -299,7 +298,7 @@ public class Board {
     }
 
     // Method for determining how surrounded the queen is or will be
-    public int checkSurroundings(Coordinate queenPos, int playerQueenNum){
+    private int checkSurroundings(Coordinate queenPos, int playerQueenNum){
         int totalValue = 0;
         int xPos = queenPos.getX();
         int yPos = queenPos.getY();
