@@ -18,12 +18,7 @@ public class GTNode implements Comparable<GTNode>{
 
         this.playerQueenNum = ((this.parent.getBoard().getPlayerQueenNum()-1) %2) +1;
 
-        this.board = new Board();
-        this.board.setBoard(this.parent.getBoard().getBoard());
-        this.board.setPlayerQueenNum(this.playerQueenNum);
-        this.board.updateGameState(moveToGetHere);
-
-        this.heuristic = this.board.getHeuristic(moveToGetHere, playerQueenNum);
+        this.heuristic = parent.board.getHeuristic(moveToGetHere, playerQueenNum);
         this.depth = this.parent.getDepth() + 1;
 
         this.makeChildren();
@@ -34,8 +29,19 @@ public class GTNode implements Comparable<GTNode>{
 
         this.board = new Board();
         this.board.setBoard(board.getBoard());
+        this.board.setPlayerQueenNum(board.getPlayerQueenNum());
         this.depth = 0;
         this.playerQueenNum = this.board.getPlayerQueenNum();
+    }
+
+    public void makeBoard(){
+        if(this.board == null) {
+            this.board = new Board();
+            this.board.setBoard(this.parent.getBoard().getBoard());
+            this.board.setPlayerQueenNum(this.playerQueenNum);
+            this.board.updateGameState(moveToGetHere);
+        }
+
     }
 
     public double getHeuristic() {
@@ -67,6 +73,7 @@ public class GTNode implements Comparable<GTNode>{
     }
 
     public void makeChildren(){
+        makeBoard();
         this.children = new PriorityQueue<>();
         ArrayList<Move> makeableMoves = this.board.getPossibleMoves();
         if(this.depth<1)
@@ -80,7 +87,12 @@ public class GTNode implements Comparable<GTNode>{
                 return -1;
             else
                 return 1;
-        return 1;
+        else{
+            if(heuristic > other.heuristic)
+                return 1;
+            else
+                return -1;
+        }
     }
 
 }
