@@ -83,7 +83,7 @@ public class COSC322Test extends GamePlayer{
     	if (GameMessage.GAME_STATE_BOARD.compareTo(messageType)==0) {
 			board.setBoard((ArrayList)msgDetails.get(AmazonsGameMessage.GAME_STATE));
     		board.printBoard();
-    		board.setPlayerQueenNum(1);// Set player num as the opposite of what we are. this board becomes the root and we assume they just moved.
+    		board.setPlayerQueenNum(2);// Set player num as our number
     		gamegui.setGameState((ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.GAME_STATE));
     		makeMove();
     	}

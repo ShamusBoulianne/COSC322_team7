@@ -23,7 +23,7 @@ new_node in a list. */
             head = new_node;
             tail = new_node;
         }
-        else if (head.data <= new_node.data) {
+        else if (!comesAfter(head, new_node)) {
         head.prev = new_node;
         new_node.next = head;
         head = new_node;
@@ -34,7 +34,7 @@ new_node in a list. */
             current = head;
 
             while (current.next != null
-                    && current.next.data > new_node.data)
+                    && comesAfter(current.next, new_node))
                 current = current.next;
 
             new_node.next = current.next;
@@ -54,9 +54,15 @@ new_node in a list. */
             ++size;
     }
 
-    boolean comesBefore(Node compareTo, Node beingAdded){
-        if(compareTo.data > beingAdded.data)
-            return true;
+    boolean comesAfter(Node compareTo, Node beingAdded){
+        boolean isLargestFirst = head.gtNode.getPlayerQueenNum() == 1; //True if keeps the largest values first, false for smallest
+        if(isLargestFirst) {
+            if (compareTo.data > beingAdded.data)
+                return true;
+        }else{
+            if (compareTo.data < beingAdded.data)
+                return true;
+        }
         return false;
     }
 
@@ -87,7 +93,7 @@ new_node in a list. */
         Board board = new Board();
 
 
-        for(int i=150; i>100; --i) {
+        for(int i=150; i>-100; --i) {
             GTNode toAdd = new GTNode(board);
             toAdd.setHeuristic(i);
             new_node = llist.newNode(toAdd);
