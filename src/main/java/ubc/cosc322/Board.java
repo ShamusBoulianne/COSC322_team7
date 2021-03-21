@@ -14,6 +14,13 @@ public class Board {
         this.board = new int[10][10];
     }
 
+    public Board duplicateBoard(){
+        Board outboard = new Board();
+        outboard.setBoard(this.getBoard());
+        outboard.setPlayerQueenNum(this.getPlayerQueenNum());
+        return outboard;
+    }
+
     public void setBoard(ArrayList<Integer> boardList){
         this.board = new int[10][10];
         int row = 0;
@@ -193,7 +200,7 @@ public class Board {
 
     public void updateGameState(Move move){
         board[move.getQueenCurr().getY()][move.getQueenCurr().getX()] = 0;
-        board[move.getQueenMove().getY()][move.getQueenMove().getY()]= this.playerQueenNum;
+        board[move.getQueenMove().getY()][move.getQueenMove().getX()]= this.playerQueenNum;
         board[move.getArrow().getY()][move.getArrow().getX()] = 3;
     }
 
