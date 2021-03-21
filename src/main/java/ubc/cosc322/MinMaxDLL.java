@@ -3,6 +3,8 @@ package ubc.cosc322;
 public class MinMaxDLL {
     Node head; // head of list
     Node tail;
+    final int maxSize = 5;
+    int size=0;
 
     /* Linked list Node*/
     class Node {
@@ -30,7 +32,7 @@ new_node in a list. */
             head = new_node;
             tail = new_node;
         }
-        else if (head.data >= new_node.data) {
+        else if (head.data <= new_node.data) {
         head.prev = new_node;
         new_node.next = head;
         head = new_node;
@@ -41,7 +43,7 @@ new_node in a list. */
             current = head;
 
             while (current.next != null
-                    && current.next.data < new_node.data)
+                    && current.next.data > new_node.data)
                 current = current.next;
 
             new_node.next = current.next;
@@ -53,6 +55,18 @@ new_node in a list. */
             new_node.prev = current;
 
         }
+        if(size == maxSize){
+            tail = tail.prev;
+            tail.next = null;
+        }
+        else
+            ++size;
+    }
+
+    boolean comesBefore(Node compareTo, Node beingAdded){
+        if(compareTo.data > beingAdded.data)
+            return true;
+        return false;
     }
 
     /*Utility functions*/
@@ -82,7 +96,7 @@ new_node in a list. */
         Board board = new Board();
 
 
-        for(int i=25; i>10; --i) {
+        for(int i=150; i>100; --i) {
             GTNode toAdd = new GTNode(board);
             toAdd.setHeuristic(i);
             new_node = llist.newNode(toAdd);
@@ -91,6 +105,7 @@ new_node in a list. */
 
         System.out.println("Created Linked List");
         llist.printList();
+        System.out.println(llist.size);
     }
 }
 /* Original code written by Rajat Mishra posted on https://www.geeksforgeeks.org/given-a-linked-list-which-is-sorted-how-will-you-insert-in-sorted-way/*/
