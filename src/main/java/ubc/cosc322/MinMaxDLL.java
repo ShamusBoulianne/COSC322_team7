@@ -9,11 +9,13 @@ public class MinMaxDLL {
         GTNode gtNode;
         double data;
         Node next;
+        Node prev;
         Node(GTNode d)
         {
             gtNode = d;
             data = gtNode.getHeuristic();
             next = null;
+            prev = null;
         }
     }
 
@@ -24,11 +26,14 @@ new_node in a list. */
         Node current;
 
         /* Special case for head node */
-        if (head == null || head.data
-                >= new_node.data) {
-            new_node.next = head;
+        if (head == null) {
             head = new_node;
             tail = new_node;
+        }
+        else if (head.data >= new_node.data) {
+        head.prev = new_node;
+        new_node.next = head;
+        head = new_node;
         }
         else {
 
@@ -40,9 +45,12 @@ new_node in a list. */
                 current = current.next;
 
             new_node.next = current.next;
-            if(current.next == null)
+            if(new_node.next != null)
+                new_node.next.prev = new_node;
+            else
                 tail = new_node;
             current.next = new_node;
+            new_node.prev = current;
 
         }
     }
@@ -74,7 +82,7 @@ new_node in a list. */
         Board board = new Board();
 
 
-        for(int i=5; i<10; ++i) {
+        for(int i=25; i>10; --i) {
             GTNode toAdd = new GTNode(board);
             toAdd.setHeuristic(i);
             new_node = llist.newNode(toAdd);
