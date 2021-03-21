@@ -2,14 +2,17 @@ package ubc.cosc322;
 
 public class MinMaxDLL {
     Node head; // head of list
+    Node tail;
 
     /* Linked list Node*/
     class Node {
-        int data;
+        GTNode gtNode;
+        double data;
         Node next;
-        Node(int d)
+        Node(GTNode d)
         {
-            data = d;
+            gtNode = d;
+            data = gtNode.getHeuristic();
             next = null;
         }
     }
@@ -25,6 +28,7 @@ new_node in a list. */
                 >= new_node.data) {
             new_node.next = head;
             head = new_node;
+            tail = new_node;
         }
         else {
 
@@ -36,16 +40,19 @@ new_node in a list. */
                 current = current.next;
 
             new_node.next = current.next;
+            if(current.next == null)
+                tail = new_node;
             current.next = new_node;
+
         }
     }
 
     /*Utility functions*/
 
     /* Function to create a node */
-    Node newNode(int data)
+    Node newNode(GTNode gtnode)
     {
-        Node x = new Node(data);
+        Node x = new Node(gtnode);
         return x;
     }
 
@@ -64,20 +71,18 @@ new_node in a list. */
     {
         MinMaxDLL llist = new MinMaxDLL();
         Node new_node;
-        new_node = llist.newNode(5);
-        llist.sortedInsert(new_node);
-        new_node = llist.newNode(10);
-        llist.sortedInsert(new_node);
-        new_node = llist.newNode(7);
-        llist.sortedInsert(new_node);
-        new_node = llist.newNode(3);
-        llist.sortedInsert(new_node);
-        new_node = llist.newNode(1);
-        llist.sortedInsert(new_node);
-        new_node = llist.newNode(9);
-        llist.sortedInsert(new_node);
+        Board board = new Board();
+
+
+        for(int i=5; i<10; ++i) {
+            GTNode toAdd = new GTNode(board);
+            toAdd.setHeuristic(i);
+            new_node = llist.newNode(toAdd);
+            llist.sortedInsert(new_node);
+        }
+
         System.out.println("Created Linked List");
         llist.printList();
     }
 }
-/* This code is contributed by Rajat Mishra */
+/* Original code written by Rajat Mishra posted on https://www.geeksforgeeks.org/given-a-linked-list-which-is-sorted-how-will-you-insert-in-sorted-way/*/
