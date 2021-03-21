@@ -5,13 +5,16 @@ import java.util.PriorityQueue;
 
 public class GTNode implements Comparable<GTNode>{
     private final int maxDepth = 2;
-    private double heuristic;
+    private double heuristic = 0;
     private Board board;
     private Move moveToGetHere;
     private GTNode parent;
     private PriorityQueue<GTNode> children;
     private int playerQueenNum;
     private int depth;
+
+    public GTNode next;
+    public GTNode prev;
 
     public GTNode(GTNode parent, Move moveToGetHere){
         this.parent = parent;
@@ -49,6 +52,10 @@ public class GTNode implements Comparable<GTNode>{
 
     public double getHeuristic() {
         return heuristic;
+    }
+
+    public void setHeuristic(double heuristic){
+        this.heuristic = heuristic;
     }
 
     public Board getBoard() {
@@ -101,7 +108,7 @@ public class GTNode implements Comparable<GTNode>{
 
     public String toString(){
         if(moveToGetHere == null)
-            return "Root node";
+            return "Root node" + heuristic;
         return "Node created: Depth:" + this.getDepth() + "  Move to get here:" + this.moveToGetHere.toString() + "  Heuristic:" + this.getHeuristic();
     }
 
