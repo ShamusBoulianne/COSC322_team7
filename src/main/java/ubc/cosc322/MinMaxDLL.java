@@ -1,4 +1,7 @@
 package ubc.cosc322;
+// This list is always sorted largest heuristic to smallest
+// node.gtNode contains the actual GameTreeNode where the heuristic is from
+
 
 public class MinMaxDLL {
     Node head; // head of list
@@ -7,19 +10,7 @@ public class MinMaxDLL {
     int size=0;
 
     /* Linked list Node*/
-    class Node {
-        GTNode gtNode;
-        double data;
-        Node next;
-        Node prev;
-        Node(GTNode d)
-        {
-            gtNode = d;
-            data = gtNode.getHeuristic();
-            next = null;
-            prev = null;
-        }
-    }
+
 
     /* function to insert a
 new_node in a list. */
@@ -106,6 +97,20 @@ new_node in a list. */
         System.out.println("Created Linked List");
         llist.printList();
         System.out.println(llist.size);
+    }
+}
+
+class Node {
+    GTNode gtNode;
+    double data;
+    Node next;
+    Node prev;
+    public Node(GTNode d)
+    {
+        gtNode = d;
+        data = gtNode.getHeuristic();
+        next = null;
+        prev = null;
     }
 }
 /* Original code written by Rajat Mishra posted on https://www.geeksforgeeks.org/given-a-linked-list-which-is-sorted-how-will-you-insert-in-sorted-way/*/

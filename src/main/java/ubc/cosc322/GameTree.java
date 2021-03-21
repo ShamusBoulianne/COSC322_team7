@@ -16,7 +16,7 @@ public class GameTree {
     }
 
     public Move getBestMove(){
-        GTNode bestChild = this.root.getChildren().poll();
+        GTNode bestChild = this.root.getChildren().head.gtNode;
         this.root = bestChild;
 
         System.out.println("The heuristic of bestChild is " + bestChild.getHeuristic());
@@ -27,7 +27,7 @@ public class GameTree {
         GTNode lookAt = root;
         System.out.println(lookAt.toString());
         while(lookAt.getChildren()!= null){
-            lookAt = lookAt.getChildren().peek();
+            lookAt = lookAt.getChildren().head.gtNode;
             System.out.println(lookAt.toString());
         }
     }
