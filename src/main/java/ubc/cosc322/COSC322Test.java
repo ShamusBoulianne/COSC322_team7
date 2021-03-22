@@ -141,7 +141,7 @@ public class COSC322Test extends GamePlayer{
 	public void makeMove(){
     	gametree = new GameTree(new GTNode(board), board.getPlayerQueenNum());
     	gametree.populateTree();
-    	//gametree.displayFirstMoves();
+    	//gametree.getRoot().getChildren().printList();
     	Move move = gametree.getBestMove();
     	updateGameState(move);
 	}

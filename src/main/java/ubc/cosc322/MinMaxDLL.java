@@ -54,8 +54,9 @@ new_node in a list. */
             ++size;
     }
 
+    //THIS IS THE METHOD THAT CHANGES IF WE TRY TO WIN OR LOSE, change isLargestFirst if trying to lose
     boolean comesAfter(Node compareTo, Node beingAdded){
-        boolean isLargestFirst = head.gtNode.getPlayerQueenNum() == 1; //True if keeps the largest values first, false for smallest
+        boolean isLargestFirst = head.gtNode.getPlayerQueenNum() == 2; //True if keeps the largest values first, false for smallest
         if(isLargestFirst) {
             if (compareTo.data > beingAdded.data)
                 return true;

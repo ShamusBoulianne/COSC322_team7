@@ -13,6 +13,10 @@ public class GameTree {
         this.root.makeChildren();
     }
 
+    public GTNode getRoot(){
+        return this.root;
+    }
+
     public Move getBestMove(){
         GTNode bestChild = this.root.getChildren().head.gtNode;
         this.root = bestChild;
