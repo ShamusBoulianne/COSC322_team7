@@ -85,7 +85,7 @@ public class GTNode implements Comparable<GTNode>{
             ArrayList<Move> makeableMoves = this.board.getPossibleMoves();
             for (Move move : makeableMoves)
                 this.children.sortedInsert(new Node(new GTNode(this, move)));
-            this.children.printList();
+            //this.children.printList();
         }
         makeGrandChildren();
     }

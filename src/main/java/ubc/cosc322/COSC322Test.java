@@ -86,7 +86,6 @@ public class COSC322Test extends GamePlayer{
 
     	if (GameMessage.GAME_STATE_BOARD.compareTo(messageType)==0) {
 			board.setBoard((ArrayList)msgDetails.get(AmazonsGameMessage.GAME_STATE));
-    		board.printBoard();
     		board.setPlayerQueenNum(1);// Set player num as our number
     		gamegui.setGameState((ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.GAME_STATE));
     		makeMove();
@@ -142,7 +141,7 @@ public class COSC322Test extends GamePlayer{
 	public void makeMove(){
     	gametree = new GameTree(new GTNode(board), board.getPlayerQueenNum());
     	gametree.populateTree();
-    	gametree.displayFirstMoves();
+    	//gametree.displayFirstMoves();
     	Move move = gametree.getBestMove();
     	updateGameState(move);
 	}
@@ -165,6 +164,7 @@ public class COSC322Test extends GamePlayer{
 
 	public void updateGameState(Move move){
 
+    	System.out.println("\n----------------------------------\n");
 		board.updateGameState(move);
 		System.out.println("The internal move was" + move.toString());
 		System.out.println("Internal Board Updated");
@@ -178,6 +178,7 @@ public class COSC322Test extends GamePlayer{
 				move.getQueenMove().getArrayList(),
 				move.getArrow().getArrayList()       );
 		System.out.println("The move made was " + move.toString());
+		board.printBoard();
 	}
 
  

@@ -194,7 +194,7 @@ public class Board {
                 for (Coordinate arrow : getReachableCoordinates(queenMove))
                     moves.add(new Move(queenCurr, queenMove, arrow));
             }
-        System.out.println("There are " + moves.size() + " moves from this position");
+        //System.out.println("There are " + moves.size() + " moves from this position");
         return moves;
     }
 
