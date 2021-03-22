@@ -148,17 +148,17 @@ public class COSC322Test extends GamePlayer{
 
 	//Our internal board uses indexing 0-9, the server uses 1-10
 	public Move formatMoveToServer(Move original){
-    	Coordinate updatedCurr = new Coordinate(original.getQueenCurr().getY()+1, original.getQueenCurr().getX()+1);
-    	Coordinate updatedQueen = new Coordinate(original.getQueenMove().getY()+1, original.getQueenMove().getX()+1);
-    	Coordinate updatedArrow = new Coordinate(original.getArrow().getY()+1, original.getArrow().getX()+1);
+    	Coordinate updatedCurr = new Coordinate(original.getQueenCurr().getX()+1, 10-original.getQueenCurr().getY());
+    	Coordinate updatedQueen = new Coordinate(original.getQueenMove().getX()+1, 10-original.getQueenMove().getY());
+    	Coordinate updatedArrow = new Coordinate(original.getArrow().getX()+1, 10-original.getArrow().getY());
     	return new Move(updatedCurr, updatedQueen, updatedArrow);
 	}
 
 	//Our internal board uses indexing 0-9, the server uses 1-10
 	public Move formatMoveFromServer(Move original){
-		Coordinate updatedCurr = new Coordinate(original.getQueenCurr().getY()-1, original.getQueenCurr().getX()-1);
-		Coordinate updatedQueen = new Coordinate(original.getQueenMove().getY()-1, original.getQueenMove().getX()-1);
-		Coordinate updatedArrow = new Coordinate(original.getArrow().getY()-1, original.getArrow().getX()-1);
+		Coordinate updatedCurr = new Coordinate(10-original.getQueenCurr().getX(), original.getQueenCurr().getY()-1);
+		Coordinate updatedQueen = new Coordinate(10-original.getQueenMove().getX(), original.getQueenMove().getY()-1);
+		Coordinate updatedArrow = new Coordinate(10-original.getArrow().getX(), original.getArrow().getY()-1);
 		return new Move(updatedCurr, updatedQueen, updatedArrow);
 	}
 
