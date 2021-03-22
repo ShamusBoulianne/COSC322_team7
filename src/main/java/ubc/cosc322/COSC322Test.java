@@ -88,17 +88,18 @@ public class COSC322Test extends GamePlayer{
 			board.setBoard((ArrayList)msgDetails.get(AmazonsGameMessage.GAME_STATE));
     		board.setPlayerQueenNum(1);// Set player num as our number
     		gamegui.setGameState((ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.GAME_STATE));
-    		makeMove();
+    		//makeMove();
     	}
     	if (GameMessage.GAME_ACTION_START.compareTo(messageType)==0) {
     		System.out.println("player-black: " + msgDetails.get(AmazonsGameMessage.PLAYER_BLACK));
+    		System.out.println(this.userName);
     		System.out.println("player-white: " + msgDetails.get(AmazonsGameMessage.PLAYER_WHITE));
-    		if(this.userName == msgDetails.get(AmazonsGameMessage.PLAYER_BLACK)) //Black plays first
+    		if(this.userName.equalsIgnoreCase((String)msgDetails.get(AmazonsGameMessage.PLAYER_BLACK))) //Black plays first
     			board.setPlayerQueenNum(2);
     		else
     			board.setPlayerQueenNum(1);
-			System.out.println("We go first, making move...");
 			if(board.getPlayerQueenNum() == 2)
+				System.out.println("We go first, making move...");
 				makeMove();
     	}
     	if (GameMessage.GAME_ACTION_MOVE.compareTo(messageType)==0) {
@@ -110,7 +111,7 @@ public class COSC322Test extends GamePlayer{
     		updateGameState(formatMoveFromServer(opponentMove));
     		makeMove();
     		System.out.println("Move made");
-    		board.printBoard();
+    		//board.printBoard();
     	}
     	return true;   	
     }
@@ -179,6 +180,7 @@ public class COSC322Test extends GamePlayer{
 				move.getArrow().getArrayList()       );
 		System.out.println("The move made was " + move.toString());
 		board.printBoard();
+		System.out.println("\n----------------------------------\n");
 	}
 
  
