@@ -28,7 +28,7 @@ public class Coordinate {
     }
 
     public boolean is0to9(int value){
-        if(value<0 || value>=10)
+        if(value<0 || value>10)
             return false;
         return true;
     }

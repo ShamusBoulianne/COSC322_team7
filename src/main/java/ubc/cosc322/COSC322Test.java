@@ -89,7 +89,7 @@ public class COSC322Test extends GamePlayer{
     		board.printBoard();
     		board.setPlayerQueenNum(1);// Set player num as our number
     		gamegui.setGameState((ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.GAME_STATE));
-    		//makeMove();
+    		makeMove();
     	}
     	if (GameMessage.GAME_ACTION_START.compareTo(messageType)==0) {
     		System.out.println("player-black: " + msgDetails.get(AmazonsGameMessage.PLAYER_BLACK));
@@ -108,7 +108,7 @@ public class COSC322Test extends GamePlayer{
 										 (ArrayList)msgDetails.get(AmazonsGameMessage.Queen_POS_NEXT),
 										 (ArrayList)msgDetails.get(AmazonsGameMessage.ARROW_POS));
 
-    		updateGameState(opponentMove);
+    		updateGameState(formatMoveFromServer(opponentMove));
     		makeMove();
     		System.out.println("Move made");
     		board.printBoard();
@@ -145,18 +145,39 @@ public class COSC322Test extends GamePlayer{
     	gametree.displayFirstMoves();
     	Move move = gametree.getBestMove();
     	updateGameState(move);
-    	gameClient.sendMoveMessage(move.getQueenCurr().getArrayList(),
-				    		       move.getQueenMove().getArrayList(),
-								   move.getArrow().getArrayList()       );
-    	System.out.println("The move made was " + move.toString());
+	}
+
+	//Our internal board uses indexing 0-9, the server uses 1-10
+	public Move formatMoveToServer(Move original){
+    	Coordinate updatedCurr = new Coordinate(original.getQueenCurr().getY()+1, original.getQueenCurr().getX()+1);
+    	Coordinate updatedQueen = new Coordinate(original.getQueenMove().getY()+1, original.getQueenMove().getX()+1);
+    	Coordinate updatedArrow = new Coordinate(original.getArrow().getY()+1, original.getArrow().getX()+1);
+    	return new Move(updatedCurr, updatedQueen, updatedArrow);
+	}
+
+	//Our internal board uses indexing 0-9, the server uses 1-10
+	public Move formatMoveFromServer(Move original){
+		Coordinate updatedCurr = new Coordinate(original.getQueenCurr().getY()-1, original.getQueenCurr().getX()-1);
+		Coordinate updatedQueen = new Coordinate(original.getQueenMove().getY()-1, original.getQueenMove().getX()-1);
+		Coordinate updatedArrow = new Coordinate(original.getArrow().getY()-1, original.getArrow().getX()-1);
+		return new Move(updatedCurr, updatedQueen, updatedArrow);
 	}
 
 	public void updateGameState(Move move){
-		gamegui.updateGameState(move.getQueenCurr().getArrayList(),
-								move.getQueenMove().getArrayList(),
-								move.getArrow().getArrayList()       );
+
 		board.updateGameState(move);
-		System.out.println("Boards updated...");
+		System.out.println("The internal move was" + move.toString());
+		System.out.println("Internal Board Updated");
+
+		move = formatMoveToServer(move);
+		gamegui.updateGameState(move.getQueenCurr().getArrayList(),
+				move.getQueenMove().getArrayList(),
+				move.getArrow().getArrayList()       );
+
+		gameClient.sendMoveMessage(move.getQueenCurr().getArrayList(),
+				move.getQueenMove().getArrayList(),
+				move.getArrow().getArrayList()       );
+		System.out.println("The move made was " + move.toString());
 	}
 
  
