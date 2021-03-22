@@ -448,7 +448,7 @@ public class Board {
                 // Don't want to move all queens into the same spot
                 if (board[yPos+1][(xPos)+a] == playerQueenNum)
                     totalValue -= 2;
-                else if (board[yPos+1][(xPos-1)+a] != 0)
+                else if (board[yPos+1][(xPos)+a] != 0)
                     totalValue -=1;
                     // Space is clear
                 else
