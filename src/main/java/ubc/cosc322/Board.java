@@ -443,7 +443,7 @@ public class Board {
             }
         }
         // If along the left edge
-        else if(yPos < 9 && yPos > 0 && xPos < 9 && xPos >0){
+        else if(yPos < 9 && yPos > 0 && xPos == 0){
             for(int a = 0; a < 2; a++){
                 // Don't want to move all queens into the same spot
                 if (board[yPos+1][(xPos)+a] == playerQueenNum)
