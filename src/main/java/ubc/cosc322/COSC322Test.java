@@ -95,9 +95,9 @@ public class COSC322Test extends GamePlayer{
     		System.out.println("player-black: " + msgDetails.get(AmazonsGameMessage.PLAYER_BLACK));
     		System.out.println("player-white: " + msgDetails.get(AmazonsGameMessage.PLAYER_WHITE));
     		if(this.userName == msgDetails.get(AmazonsGameMessage.PLAYER_BLACK)) //Black plays first
-    			board.setPlayerQueenNum(1);
-    		else
     			board.setPlayerQueenNum(2);
+    		else
+    			board.setPlayerQueenNum(1);
 			System.out.println("We go first, making move...");
 			if(board.getPlayerQueenNum() == 2)
 				makeMove();
