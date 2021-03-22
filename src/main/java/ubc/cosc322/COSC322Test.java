@@ -2,7 +2,7 @@
 // We had a group member drop the course on march 8th,
 package ubc.cosc322;
 
-import java.lang.reflect.Array;
+import java.util.concurrent.TimeUnit;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -74,6 +74,10 @@ public class COSC322Test extends GamePlayer{
 
 	@Override
     public boolean handleGameMessage(String messageType, Map<String, Object> msgDetails) {
+    	try {
+			TimeUnit.SECONDS.sleep((long) 3.0);
+		}catch( Exception e)
+		{}
     	//This method will be called by the GameClient when it receives a game-related message
     	//from the server.
     	
@@ -83,9 +87,9 @@ public class COSC322Test extends GamePlayer{
     	if (GameMessage.GAME_STATE_BOARD.compareTo(messageType)==0) {
 			board.setBoard((ArrayList)msgDetails.get(AmazonsGameMessage.GAME_STATE));
     		board.printBoard();
-    		board.setPlayerQueenNum(2);// Set player num as our number
+    		board.setPlayerQueenNum(1);// Set player num as our number
     		gamegui.setGameState((ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.GAME_STATE));
-    		makeMove();
+    		//makeMove();
     	}
     	if (GameMessage.GAME_ACTION_START.compareTo(messageType)==0) {
     		System.out.println("player-black: " + msgDetails.get(AmazonsGameMessage.PLAYER_BLACK));
