@@ -15,7 +15,7 @@ public class Move {
         setQueenCurr(queenCurr);
         Coordinate queenMove = new Coordinate(move.get(1), move.get(0));
         setQueenMove(queenMove);
-        Coordinate arrowSpot = new Coordinate(arrow.get(1), move.get(0));
+        Coordinate arrowSpot = new Coordinate(arrow.get(1), arrow.get(0));
         setArrow(arrowSpot);
     }
     public Move(Coordinate curr, Coordinate move, Coordinate arrow){
