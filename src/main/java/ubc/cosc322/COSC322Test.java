@@ -157,7 +157,7 @@ public class COSC322Test extends GamePlayer{
 				move.getQueenMove().getArrayList(),
 				move.getArrow().getArrayList()       );
 		System.out.println("The move sent to the server is:" + move.toString());
-		System.out.println("Move number" + moveNum++);
+		System.out.println("Move number " + moveNum++);
 		System.out.println("\n----------------------------------\n");
 	}
 
