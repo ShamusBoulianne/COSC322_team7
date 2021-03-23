@@ -27,6 +27,7 @@ public class COSC322Test extends GamePlayer{
 
     private Board board;
     private GameTree gametree;
+    private int moveNum = 1;
  
 	
     /**
@@ -84,7 +85,7 @@ public class COSC322Test extends GamePlayer{
 			board.setBoard((ArrayList)msgDetails.get(AmazonsGameMessage.GAME_STATE));
     		board.setPlayerQueenNum(1);// Set player num as our number
     		gamegui.setGameState((ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.GAME_STATE));
-    		makeMove();
+    		//makeMove();
     	}
     	if (GameMessage.GAME_ACTION_START.compareTo(messageType)==0) {
     		System.out.println("player-black: " + msgDetails.get(AmazonsGameMessage.PLAYER_BLACK));
@@ -101,7 +102,7 @@ public class COSC322Test extends GamePlayer{
     	}
     	if (GameMessage.GAME_ACTION_MOVE.compareTo(messageType)==0) {
 			System.out.println("\n----------------------------------\n");
-    		System.out.println("Opponent Move recieved");
+    		System.out.println("Opponent Move recieved. Move Number " + moveNum++);
     		Move opponentMove = new Move((ArrayList)msgDetails.get(AmazonsGameMessage.QUEEN_POS_CURR),
 										 (ArrayList)msgDetails.get(AmazonsGameMessage.Queen_POS_NEXT),
 										 (ArrayList)msgDetails.get(AmazonsGameMessage.ARROW_POS));
@@ -161,17 +162,17 @@ public class COSC322Test extends GamePlayer{
 
 	//Our internal board uses indexing 0-9, the server uses 1-10
 	public Move formatMoveToServer(Move original){
-    	Coordinate updatedCurr = new Coordinate(10-original.getQueenCurr().getY(), original.getQueenCurr().getX()+1);
-    	Coordinate updatedQueen = new Coordinate(10-original.getQueenMove().getY(), original.getQueenMove().getX()+1);
-    	Coordinate updatedArrow = new Coordinate(10-original.getArrow().getY(), original.getArrow().getX()+1);
+    	Coordinate updatedCurr = new Coordinate(original.getQueenCurr().getX()+1, 10-original.getQueenCurr().getY());
+    	Coordinate updatedQueen = new Coordinate(original.getQueenMove().getX()+1, 10-original.getQueenMove().getY());
+    	Coordinate updatedArrow = new Coordinate(original.getArrow().getX()+1, 10-original.getArrow().getY());
     	return new Move(updatedCurr, updatedQueen, updatedArrow);
 	}
 
 	//Our internal board uses indexing 0-9, the server uses 1-10
 	public Move formatMoveFromServer(Move original){
-		Coordinate updatedCurr = new Coordinate(original.getQueenCurr().getY()-1, 10-original.getQueenCurr().getX());
-		Coordinate updatedQueen = new Coordinate(original.getQueenMove().getY()-1, 10-original.getQueenMove().getX());
-		Coordinate updatedArrow = new Coordinate(original.getArrow().getY()-1, 10-original.getArrow().getX());
+		Coordinate updatedCurr = new Coordinate(10-original.getQueenCurr().getX(), original.getQueenCurr().getY()-1);
+		Coordinate updatedQueen = new Coordinate(10-original.getQueenMove().getX(), original.getQueenMove().getY()-1);
+		Coordinate updatedArrow = new Coordinate(10-original.getArrow().getX(), original.getArrow().getY()-1);
 		return new Move(updatedCurr, updatedQueen, updatedArrow);
 	}
 
