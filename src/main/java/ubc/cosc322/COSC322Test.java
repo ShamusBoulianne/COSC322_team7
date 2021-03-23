@@ -34,7 +34,7 @@ public class COSC322Test extends GamePlayer{
      * @param args for name and passwd (current, any string would work)
      */
     public static void main(String[] args) {				 
-    	GamePlayer player = new COSC322Test("Team 07", "pass");
+    	GamePlayer player = new COSC322Test("Ryan", "pass");
     	
     	if(player.getGameGUI() == null) {
     		player.Go();
@@ -74,10 +74,6 @@ public class COSC322Test extends GamePlayer{
 
 	@Override
     public boolean handleGameMessage(String messageType, Map<String, Object> msgDetails) {
-    	try {
-			TimeUnit.SECONDS.sleep((long) 3.0);
-		}catch( Exception e)
-		{}
     	//This method will be called by the GameClient when it receives a game-related message
     	//from the server.
     	
@@ -98,19 +94,26 @@ public class COSC322Test extends GamePlayer{
     			board.setPlayerQueenNum(2);
     		else
     			board.setPlayerQueenNum(1);
-			if(board.getPlayerQueenNum() == 2)
+			if(board.getPlayerQueenNum() == 2) {
 				System.out.println("We go first, making move...");
 				makeMove();
+			}
     	}
     	if (GameMessage.GAME_ACTION_MOVE.compareTo(messageType)==0) {
+			System.out.println("\n----------------------------------\n");
     		System.out.println("Opponent Move recieved");
     		Move opponentMove = new Move((ArrayList)msgDetails.get(AmazonsGameMessage.QUEEN_POS_CURR),
 										 (ArrayList)msgDetails.get(AmazonsGameMessage.Queen_POS_NEXT),
 										 (ArrayList)msgDetails.get(AmazonsGameMessage.ARROW_POS));
-
-    		updateGameState(formatMoveFromServer(opponentMove));
+    		System.out.println("Move received from Server: " + opponentMove.toString());
+			board.setPlayerQueenNum(board.getPlayerQueenNum()%2+1);
+    		updateInternalGameState(formatMoveFromServer(opponentMove));
+			board.setPlayerQueenNum(board.getPlayerQueenNum()%2+1);
+			try {
+				TimeUnit.SECONDS.sleep((long) 3.0);
+			}catch( Exception e)
+			{}
     		makeMove();
-    		System.out.println("Move made");
     		//board.printBoard();
     	}
     	return true;   	
@@ -144,7 +147,14 @@ public class COSC322Test extends GamePlayer{
     	gametree.populateTree();
     	//gametree.getRoot().getChildren().printList();
     	Move move = gametree.getBestMove();
-    	updateGameState(move);
+    	System.out.println("\n----------------------------------\n");
+    	updateInternalGameState(move);
+
+    	move = formatMoveToServer(move);
+		gameClient.sendMoveMessage(move.getQueenCurr().getArrayList(),
+				move.getQueenMove().getArrayList(),
+				move.getArrow().getArrayList()       );
+		System.out.println("The move sent to the server is:" + move.toString());
 	}
 
 	//Our internal board uses indexing 0-9, the server uses 1-10
@@ -163,9 +173,8 @@ public class COSC322Test extends GamePlayer{
 		return new Move(updatedCurr, updatedQueen, updatedArrow);
 	}
 
-	public void updateGameState(Move move){
+	public void updateInternalGameState(Move move){
 
-    	System.out.println("\n----------------------------------\n");
 		board.updateGameState(move);
 		System.out.println("The internal move was" + move.toString());
 		System.out.println("Internal Board Updated");
@@ -175,10 +184,6 @@ public class COSC322Test extends GamePlayer{
 				move.getQueenMove().getArrayList(),
 				move.getArrow().getArrayList()       );
 
-		gameClient.sendMoveMessage(move.getQueenCurr().getArrayList(),
-				move.getQueenMove().getArrayList(),
-				move.getArrow().getArrayList()       );
-		System.out.println("The move made was " + move.toString());
 		board.printBoard();
 		System.out.println("\n----------------------------------\n");
 	}
