@@ -71,14 +71,12 @@ public class Board {
         }
     }
 
-    public ArrayList<Coordinate> getQueenCoordinates(){
+    public ArrayList<Coordinate> getQueenCoordinates(int queenNum){
         ArrayList<Coordinate> pos = new ArrayList();
-        int queensFound = 0;
         for(int r=0; r< board.length; ++r)
             for(int c=0; c<board[r].length; ++c)
-                if(board[r][c] == this.playerQueenNum){
+                if(board[r][c] == queenNum){
                     pos.add(new Coordinate(r, c));
-                    ++queensFound;
                 }
         return pos;
     }
@@ -189,13 +187,23 @@ public class Board {
 
     public ArrayList<Move> getPossibleMoves(){
         ArrayList<Move> moves = new ArrayList();
-        for(Coordinate queenCurr: getQueenCoordinates())
+        for(Coordinate queenCurr: getQueenCoordinates(this.playerQueenNum))
             for (Coordinate queenMove : getReachableCoordinates(queenCurr)) {
                 for (Coordinate arrow : getReachableCoordinates(queenMove))
                     moves.add(new Move(queenCurr, queenMove, arrow));
             }
         //System.out.println("There are " + moves.size() + " moves from this position");
         return moves;
+    }
+
+    public int countPossibleMoves(int queenNum){
+        int count = 0;
+        for(Coordinate queenCurr: getQueenCoordinates(this.playerQueenNum))
+            for (Coordinate queenMove : getReachableCoordinates(queenCurr)) {
+                for (Coordinate arrow : getReachableCoordinates(queenMove))
+                    ++count;
+            }
+        return count;
     }
 
     public void updateGameState(Move move){
@@ -486,5 +494,10 @@ public class Board {
             totalValue -= 7;
 
         return totalValue;
+    }
+
+
+    public double getRatioOurMovesToOpponentMoves(){
+        return (double)countPossibleMoves(this.playerQueenNum)/countPossibleMoves(this.playerQueenNum%2 +1 );
     }
 }
