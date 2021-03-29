@@ -225,18 +225,33 @@ public class Board {
 
         // See if moving closer or further from placed arrows
         if(playerQueenNum == 1){
+            // Arrow distances are particularly useful early on, less so in the late game
             moveValue += getNearestArrowDistance(newPos)-getNearestArrowDistance(currentPos);
             moveValue += checkSurroundings(newPos, playerQueenNum) - checkSurroundings(currentPos, playerQueenNum);
             moveValue += arrowAiming(arrowPos, playerQueenNum);
+            moveValue += getNumberOfMoves(newPos);
         }
         else {
             moveValue -= getNearestArrowDistance(newPos)-getNearestArrowDistance(currentPos);
             moveValue -= checkSurroundings(newPos, playerQueenNum) - checkSurroundings(currentPos, playerQueenNum);
             moveValue -= arrowAiming(arrowPos, playerQueenNum);
+            moveValue -= getNumberOfMoves(newPos);
         }
 
 
         return moveValue;
+    }
+
+    // Determine the number of possible moves a queen will have in a space
+    private double getNumberOfMoves(Coordinate queenPos){
+        int numMoves = 0;
+        for (Coordinate queenMove : getReachableCoordinates(queenPos)) {
+            for (Coordinate arrow : getReachableCoordinates(queenMove))
+                // Ensure that the number of moves is weighted heavily
+                numMoves += 3;
+        }
+
+        return numMoves;
     }
 
     // Method to turn arrow coordinates back into the absolute distance
@@ -303,9 +318,9 @@ public class Board {
             }
         }
 
-        // The move is poor if the arrow is placed close to a friendly queen
+        // The move is very poor if the arrow is placed close to a friendly queen
         if (queenTeam == playerQueenNum){
-            distanceToQueen = distanceToQueen * -1;
+            distanceToQueen = distanceToQueen * -0.5;
         }
 
         // Simple equation so that the value of placing an arrow closer to a queen is greater magnitude
