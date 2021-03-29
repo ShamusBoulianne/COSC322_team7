@@ -4,27 +4,28 @@ import java.util.ArrayList;
 import java.util.PriorityQueue;
 
 public class GTNode implements Comparable<GTNode>{
-    private final int maxDepth = 1;
+    private final int maxDepth = 3;
     private double heuristic;
     private Board board;
     private Move moveToGetHere;
     private GTNode parent;
-    private MinMaxDLL children;
+    private Children children;
     private int playerQueenNum;
     private int depth;
 
     public GTNode(GTNode parent, Move moveToGetHere){
         this.parent = parent;
         this.moveToGetHere = moveToGetHere;
-
         this.playerQueenNum = ((this.parent.getBoard().getPlayerQueenNum()) %2) +1;
 
-        this.heuristic = parent.board.getHeuristic(moveToGetHere, playerQueenNum);
+        makeBoard();
+        this.board.updateGameState(moveToGetHere);
+        this.board.setPlayerQueenNum(this.playerQueenNum);
+
+        this.heuristic = this.board.getRatioOurMovesToOpponentMoves();
         this.depth = this.parent.getDepth() + 1;
-
+        
         //System.out.println(this.toString());
-
-        //this.makeChildren();
     }
 
     public GTNode(Board board){
@@ -35,6 +36,7 @@ public class GTNode implements Comparable<GTNode>{
         this.board.setPlayerQueenNum(board.getPlayerQueenNum());
         this.depth = 0;
         this.playerQueenNum = this.board.getPlayerQueenNum();
+        updateHeuristic();
     }
 
     public void makeBoard(){
@@ -46,13 +48,7 @@ public class GTNode implements Comparable<GTNode>{
 
     }
 
-    public double getHeuristic() {
-        return heuristic;
-    }
-
-    public void setHeuristic(double heuristic){
-        this.heuristic = heuristic;
-    }
+    public double getHeuristic(){ return heuristic;}
 
     public Board getBoard() {
         return board;
@@ -66,7 +62,7 @@ public class GTNode implements Comparable<GTNode>{
         return parent;
     }
 
-    public MinMaxDLL getChildren() {
+    public Children getChildren() {
         return children;
     }
 
@@ -78,25 +74,16 @@ public class GTNode implements Comparable<GTNode>{
         return depth;
     }
 
-    public void makeChildren(){
-        if(this.depth<maxDepth) {
-            makeBoard();
-            this.children = new MinMaxDLL();
+    private void updateHeuristic(){
+        if(this.depth < maxDepth){
+            this.children = new Children(this.playerQueenNum != 1);
             ArrayList<Move> makeableMoves = this.board.getPossibleMoves();
-            for (Move move : makeableMoves)
-                this.children.sortedInsert(new Node(new GTNode(this, move)));
-            //this.children.printList();
-        }
-        makeGrandChildren();
-    }
-
-    public void makeGrandChildren(){
-        if(children != null){
-            Node iterator = children.head;
-            do{
-                iterator.gtNode.makeChildren();
-                iterator = iterator.next;
-            }while(iterator != null);
+            for(Move move : makeableMoves){
+                this.children.addFirstPass(new GTNode(this, move));
+            }
+            for(GTNode node: this.children.getFirstPass())
+                node.updateHeuristic();
+            this.heuristic = this.children.getBestChild().getHeuristic();
         }
     }
 
@@ -107,7 +94,7 @@ public class GTNode implements Comparable<GTNode>{
             else
                 return 1;
         else{
-            if(heuristic > other.heuristic)
+            if(heuristic >= other.heuristic)
                 return 1;
             else
                 return -1;

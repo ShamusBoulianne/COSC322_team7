@@ -198,7 +198,7 @@ public class Board {
 
     public int countPossibleMoves(int queenNum){
         int count = 0;
-        for(Coordinate queenCurr: getQueenCoordinates(this.playerQueenNum))
+        for(Coordinate queenCurr: getQueenCoordinates(queenNum))
             for (Coordinate queenMove : getReachableCoordinates(queenCurr)) {
                 for (Coordinate arrow : getReachableCoordinates(queenMove))
                     ++count;
@@ -498,6 +498,14 @@ public class Board {
 
 
     public double getRatioOurMovesToOpponentMoves(){
-        return (double)countPossibleMoves(this.playerQueenNum)/countPossibleMoves(this.playerQueenNum%2 +1 );
+        double blackMoves = countPossibleMoves(2);
+        double whiteMoves = countPossibleMoves(1);
+        if(blackMoves == 0){
+            return 5000;
+        }
+        if(whiteMoves == 0){
+            return -5000;
+        }
+        return Math.log(whiteMoves / blackMoves);
     }
 }

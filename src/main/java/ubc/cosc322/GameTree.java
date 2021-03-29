@@ -1,7 +1,7 @@
 package ubc.cosc322;
 
 public class GameTree {
-    private GTNode root;
+    /*private GTNode root;
     private int playerQueenNum;
 
     public GameTree(GTNode root, int playerQueenNum){
@@ -10,7 +10,7 @@ public class GameTree {
     }
 
     public void populateTree(){
-        this.root.makeChildren();
+        this.root.updateHeuristic();
     }
 
     public GTNode getRoot(){
@@ -36,4 +36,5 @@ public class GameTree {
                 lookAt.getBoard().printBoard();
         }
     }
+     */
 }

@@ -4,21 +4,17 @@ package ubc.cosc322;
 
 
 public class MinMaxDLL {
+    /*
     Node head; // head of list
     Node tail;
     final int maxSize = 5;
     int size=0;
 
-    /* Linked list Node*/
-
-
-    /* function to insert a
-new_node in a list. */
     void sortedInsert(Node new_node)
     {
         Node current;
 
-        /* Special case for head node */
+
         if (head == null) {
             head = new_node;
             tail = new_node;
@@ -30,7 +26,7 @@ new_node in a list. */
         }
         else {
 
-            /* Locate the node before point of insertion. */
+
             current = head;
 
             while (current.next != null
@@ -67,16 +63,16 @@ new_node in a list. */
         return false;
     }
 
-    /*Utility functions*/
 
-    /* Function to create a node */
+
+
     Node newNode(GTNode gtnode)
     {
         Node x = new Node(gtnode);
         return x;
     }
 
-    /* Function to print linked list */
+
     void printList()
     {
         Node temp = head;
@@ -87,7 +83,7 @@ new_node in a list. */
     }
 
 
-    /* Driver function to test above methods */
+
     public static void main(String args[])
     {
         MinMaxDLL llist = new MinMaxDLL();
@@ -106,6 +102,7 @@ new_node in a list. */
         llist.printList();
         System.out.println(llist.size);
     }
+    */
 }
 
 class Node {
