@@ -4,7 +4,7 @@ import java.util.PriorityQueue;
 import java.util.TreeSet;
 
 public class Children {
-    final int maxSize = 5;
+    final int maxSize = 100;
 
     double bestHeruistic;
     double worstHeuristic;
@@ -38,10 +38,6 @@ public class Children {
     }
 
     public GTNode getBestChild(){
-        return this.bestChild;
-    }
-
-    public double getBestHeruistic(){
         for(GTNode node : this.firstPass)
             if(isWhite){
                 if(bestHeruistic > node.getHeuristic()){
@@ -55,7 +51,6 @@ public class Children {
                     worstHeuristic = node.getHeuristic();
                 }
             }
-        return this.bestHeruistic;
+            return this.bestChild;
     }
-
 }

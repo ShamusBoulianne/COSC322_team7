@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.PriorityQueue;
 
 public class GTNode implements Comparable<GTNode>{
-    private final int maxDepth = 3;
+    private final int maxDepth = 10;
+    private final int milliSecondsToFinish = 15*1000;
+    private double finishTime;
     private double heuristic;
     private Board board;
     private Move moveToGetHere;
@@ -17,6 +19,7 @@ public class GTNode implements Comparable<GTNode>{
         this.parent = parent;
         this.moveToGetHere = moveToGetHere;
         this.playerQueenNum = ((this.parent.getBoard().getPlayerQueenNum()) %2) +1;
+        this.finishTime = this.parent.finishTime;
 
         makeBoard();
         this.board.updateGameState(moveToGetHere);
@@ -30,6 +33,7 @@ public class GTNode implements Comparable<GTNode>{
 
     public GTNode(Board board){
         //used to create the root
+        this.finishTime = milliSecondsToFinish + System.currentTimeMillis();
 
         this.board = new Board();
         this.board.setBoard(board.getBoard());
@@ -79,10 +83,15 @@ public class GTNode implements Comparable<GTNode>{
             this.children = new Children(this.playerQueenNum != 1);
             ArrayList<Move> makeableMoves = this.board.getPossibleMoves();
             for(Move move : makeableMoves){
+                if(System.currentTimeMillis()>finishTime)
+                    break;
                 this.children.addFirstPass(new GTNode(this, move));
             }
-            for(GTNode node: this.children.getFirstPass())
+            for(GTNode node: this.children.getFirstPass()) {
+                if (System.currentTimeMillis() > finishTime)
+                    break;
                 node.updateHeuristic();
+            }
             this.heuristic = this.children.getBestChild().getHeuristic();
         }
     }

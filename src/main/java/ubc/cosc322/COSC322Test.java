@@ -111,10 +111,6 @@ public class COSC322Test extends GamePlayer{
     		updateInternalGameState(formatMoveFromServer(opponentMove));
 			System.out.println("\n----------------------------------\n");
 			board.setPlayerQueenNum(board.getPlayerQueenNum()%2+1);
-			try {
-				TimeUnit.SECONDS.sleep((long) 3.0);
-			}catch( Exception e)
-			{}
     		makeMove();
     		//board.printBoard();
     	}
