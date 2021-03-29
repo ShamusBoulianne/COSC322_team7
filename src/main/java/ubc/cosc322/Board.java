@@ -253,7 +253,7 @@ public class Board {
             for (Coordinate queenMove : getReachableCoordinates(queenCurr)) {
                 for (Coordinate arrow : getReachableCoordinates(queenMove))
                     // Ensure the number of moves is heavily weighted
-                    numMoves+=3;
+                    numMoves+=2;
             }
         return numMoves;
     }
@@ -270,7 +270,7 @@ public class Board {
     // Previously checked what team the nearest queen was,
     // will now check what queen an arrow is near
     private double arrowAiming(Coordinate arrowPos, int playerQueenNum){
-        int arrowValue = 0;
+        double arrowValue = 0;
 
         // Run through all Y rows
         for (int y = 0; y<10; y++){
@@ -289,12 +289,12 @@ public class Board {
 
                     // Heavily penalize arrows next to a friendly queen
                     if (queenCheck == playerQueenNum) {
-                        arrowValue -= 2;
+                        arrowValue -= 0.5;
                     }
 
                     // Support arrows next to enemy
                     else if (queenCheck != 0 && queenCheck != 3){
-                        arrowValue += 1;
+                        arrowValue += 0.1;
                     }
                 }
             }
