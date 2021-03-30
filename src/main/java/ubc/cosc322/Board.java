@@ -289,12 +289,12 @@ public class Board {
 
                     // Heavily penalize arrows next to a friendly queen
                     if (queenCheck == playerQueenNum) {
-                        arrowValue -= 0.5;
+                        arrowValue -= 0.75;
                     }
 
                     // Support arrows next to enemy
                     else if (queenCheck != 0 && queenCheck != 3){
-                        arrowValue += 0.1;
+                        arrowValue += 0.5;
                     }
                 }
             }
