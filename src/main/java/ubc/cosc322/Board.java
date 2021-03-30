@@ -235,12 +235,12 @@ public class Board {
             // valueCounter checks the value of the board for each team individually
             // then adds it the total value
             int valueCounter = 0;
-            valueCounter += getNumberOfMoves(team);
             if (valueCounter == 0)
                 valueCounter = -500;
             // Change the sign for the value of team 2 moves
             if (team == 2)
                 valueCounter = valueCounter*-1;
+            valueCounter += getNumberOfMoves();
             moveValue += valueCounter;
         }
 
@@ -264,22 +264,6 @@ public class Board {
                     blackMoves++;
             }
         return 2 * (whiteMoves - blackMoves);
-    }
-    
-    private double getNumberOfMoves(int queenNum){
-        int numMoves = 0;
-        for(Coordinate queenCurr: getQueenCoordinates(queenNum))
-            for (Coordinate queenMove : getReachableCoordinates(queenCurr)) {
-                for (Coordinate arrow : getReachableCoordinates(queenMove))
-                    // Ensure the number of moves is heavily weighted
-                    blackMoves++;
-                    numMoves+=2;
-            }
-        if(whiteMoves == 0)
-            return Double.NEGATIVE_INFINITY;
-        if(blackMoves == 0)
-            return Double.POSITIVE_INFINITY;
-        return 2*(whiteMoves-blackMoves);
     }
 
     // Determine the number of possible moves a team will have
