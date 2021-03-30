@@ -248,16 +248,24 @@ public class Board {
     }
 
     // Determine the number of possible moves a team will have
-    private double getNumberOfMoves(){
+    private double getNumberOfMoves() {
         int whiteMoves = 0;
         int blackMoves = 0;
-        for(Coordinate queenCurr: getQueenCoordinates(1))
+        for (Coordinate queenCurr : getQueenCoordinates(1))
             for (Coordinate queenMove : getReachableCoordinates(queenCurr)) {
                 for (Coordinate arrow : getReachableCoordinates(queenMove))
                     // Ensure the number of moves is heavily weighted
                     whiteMoves++;
             }
-        for(Coordinate queenCurr: getQueenCoordinates(2))
+        for (Coordinate queenCurr : getQueenCoordinates(2))
+            for (Coordinate queenMove : getReachableCoordinates(queenCurr)) {
+                for (Coordinate arrow : getReachableCoordinates(queenMove))
+                    // Ensure the number of moves is heavily weighted
+                    blackMoves++;
+            }
+        return 2 * (whiteMoves - blackMoves);
+    }
+    
     private double getNumberOfMoves(int queenNum){
         int numMoves = 0;
         for(Coordinate queenCurr: getQueenCoordinates(queenNum))
