@@ -235,12 +235,12 @@ public class Board {
             // valueCounter checks the value of the board for each team individually
             // then adds it the total value
             int valueCounter = 0;
-
-            valueCounter += arrowAimingIntermediary(team);
+            valueCounter += getNumberOfMoves(team);
+            if (valueCounter == 0)
+                valueCounter = -500;
             // Change the sign for the value of team 2 moves
             if (team == 2)
                 valueCounter = valueCounter*-1;
-            valueCounter += getNumberOfMoves();
             moveValue += valueCounter;
         }
 
@@ -258,10 +258,14 @@ public class Board {
                     whiteMoves++;
             }
         for(Coordinate queenCurr: getQueenCoordinates(2))
+    private double getNumberOfMoves(int queenNum){
+        int numMoves = 0;
+        for(Coordinate queenCurr: getQueenCoordinates(queenNum))
             for (Coordinate queenMove : getReachableCoordinates(queenCurr)) {
                 for (Coordinate arrow : getReachableCoordinates(queenMove))
                     // Ensure the number of moves is heavily weighted
                     blackMoves++;
+                    numMoves+=2;
             }
         if(whiteMoves == 0)
             return Double.NEGATIVE_INFINITY;
@@ -301,7 +305,6 @@ public class Board {
 
                     // Heavily penalize arrows next to a friendly queen
                     if (queenCheck == playerQueenNum) {
-                        arrowValue -= 0.5;
                     }
 
                     // Support arrows next to enemy
@@ -314,4 +317,17 @@ public class Board {
         return arrowValue;
     }
 
+
+    // Deprecated test function
+    public double getRatioOurMovesToOpponentMoves(){
+        double blackMoves = countPossibleMoves(2);
+        double whiteMoves = countPossibleMoves(1);
+        if(blackMoves == 0){
+            return 5000;
+        }
+        if(whiteMoves == 0){
+            return -5000;
+        }
+        return Math.log(whiteMoves / blackMoves);
+    }
 }
