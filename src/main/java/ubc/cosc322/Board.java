@@ -303,7 +303,7 @@ public class Board {
         ArrayList<Move> moves = new ArrayList();
         for(Coordinate queenCurr: getQueenCoordinates(this.playerQueenNum))
             for (Coordinate queenMove : getReachableCoordinates(queenCurr)) {
-                for (Coordinate arrow : getReachableArrowCoordinates(queenMove, queenCurr))
+                for (Coordinate arrow : getReachableCoordinates(queenMove))
                     moves.add(new Move(queenCurr, queenMove, arrow));
             }
         //System.out.println("There are " + moves.size() + " moves from this position");
@@ -362,13 +362,13 @@ public class Board {
         int blackMoves = 0;
         for (Coordinate queenCurr : getQueenCoordinates(1))
             for (Coordinate queenMove : getReachableCoordinates(queenCurr)) {
-                for (Coordinate arrow : getReachableArrowCoordinates(queenMove, queenCurr))
+                for (Coordinate arrow : getReachableCoordinates(queenMove))
                     // Ensure the number of moves is heavily weighted
                     whiteMoves++;
             }
         for (Coordinate queenCurr : getQueenCoordinates(2))
             for (Coordinate queenMove : getReachableCoordinates(queenCurr)) {
-                for (Coordinate arrow : getReachableArrowCoordinates(queenMove, queenCurr))
+                for (Coordinate arrow : getReachableCoordinates(queenMove))
                     // Ensure the number of moves is heavily weighted
                     blackMoves++;
             }
