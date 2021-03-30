@@ -241,8 +241,8 @@ public class Board {
             int valueCounter = 0;
             valueCounter += getNumberOfMoves();
             // If there are no moves, heavily penalize this board
-            if (valueCounter == 0)
-                valueCounter = -500;
+            //if (valueCounter == 0)
+              //  valueCounter = -500;
             // Change the sign for the value of team 2 moves
            // if (team == 2)
              //   valueCounter = valueCounter*-1;
