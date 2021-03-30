@@ -1,11 +1,10 @@
 package ubc.cosc322;
 
 import java.util.ArrayList;
-import java.util.PriorityQueue;
 
 public class GTNode implements Comparable<GTNode>{
-    private final int maxDepth = 10;
-    private final int milliSecondsToFinish = 15*1000;
+    private final int maxDepth = 3;
+    private final int milliSecondsToFinish = 5*1000;
     private double finishTime;
     private double heuristic;
     private Board board;
@@ -62,16 +61,8 @@ public class GTNode implements Comparable<GTNode>{
         return moveToGetHere;
     }
 
-    public GTNode getParent() {
-        return parent;
-    }
-
     public Children getChildren() {
         return children;
-    }
-
-    public int getPlayerQueenNum() {
-        return playerQueenNum;
     }
 
     public int getDepth() {
@@ -80,6 +71,10 @@ public class GTNode implements Comparable<GTNode>{
 
     private void updateHeuristic(){
         if(this.depth < maxDepth){
+            if(this.heuristic == Double.POSITIVE_INFINITY)
+                return;
+            if(this.heuristic == Double.NEGATIVE_INFINITY)
+                return;
             this.children = new Children(this.playerQueenNum != 1);
             ArrayList<Move> makeableMoves = this.board.getPossibleMoves();
             for(Move move : makeableMoves){
@@ -87,12 +82,17 @@ public class GTNode implements Comparable<GTNode>{
                     break;
                 this.children.addFirstPass(new GTNode(this, move));
             }
-            for(GTNode node: this.children.getFirstPass()) {
-                if (System.currentTimeMillis() > finishTime)
-                    break;
-                node.updateHeuristic();
+            try {
+                for (GTNode node : this.children.getFirstPass()) {
+                    if (System.currentTimeMillis() > finishTime)
+                        break;
+                    node.updateHeuristic();
+                }
+                this.heuristic = this.children.getBestChild().getHeuristic();
+            }catch (NullPointerException e){
+                System.out.print("Null pointer caught in updateHeuristic");
             }
-            this.heuristic = this.children.getBestChild().getHeuristic();
+
         }
     }
 

@@ -4,7 +4,7 @@ import java.util.PriorityQueue;
 import java.util.TreeSet;
 
 public class Children {
-    final int maxSize = 100;
+    final int maxSize = 5;
 
     double bestHeruistic;
     double worstHeuristic;
@@ -20,16 +20,28 @@ public class Children {
     }
 
     public void addFirstPass(GTNode node){
-        if(firstPass.size() < maxSize ){
+        if (firstPass.size() < maxSize) {
             firstPass.add(node);
-            worstHeuristic = firstPass.first().getHeuristic();
-        }
-        else
-            if(node.getHeuristic() > worstHeuristic){
-                firstPass.pollFirst();
-                firstPass.add(node);
+            if(isWhite)
                 worstHeuristic = firstPass.first().getHeuristic();
+            else
+                bestHeruistic = firstPass.first().getHeuristic();
+        }
+        else{
+            if(isWhite) {
+                if (node.getHeuristic() > worstHeuristic) {
+                    firstPass.pollFirst();
+                    firstPass.add(node);
+                    worstHeuristic = firstPass.first().getHeuristic();
+                }
+            } else {
+                    if (node.getHeuristic() < bestHeruistic) {
+                        firstPass.pollFirst();
+                        firstPass.add(node);
+                        bestHeruistic = firstPass.first().getHeuristic();
+                    }
             }
+        }
         bestChild = firstPass.last();
     }
 
@@ -38,15 +50,17 @@ public class Children {
     }
 
     public GTNode getBestChild(){
+        double bestFound = Double.NEGATIVE_INFINITY;
+        double worstFound = Double.POSITIVE_INFINITY;
         for(GTNode node : this.firstPass)
             if(isWhite){
-                if(bestHeruistic > node.getHeuristic()){
+                if(bestFound < node.getHeuristic()){
                     bestChild = node;
                     bestHeruistic = node.getHeuristic();
                 }
             }
             else {
-                if (worstHeuristic < node.getHeuristic()) {
+                if (worstFound > node.getHeuristic()) {
                     bestChild = node;
                     worstHeuristic = node.getHeuristic();
                 }

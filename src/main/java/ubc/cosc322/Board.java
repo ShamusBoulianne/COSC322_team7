@@ -235,11 +235,12 @@ public class Board {
             // valueCounter checks the value of the board for each team individually
             // then adds it the total value
             int valueCounter = 0;
-            valueCounter += getNumberOfMoves(team);
+
             valueCounter += arrowAimingIntermediary(team);
             // Change the sign for the value of team 2 moves
             if (team == 2)
                 valueCounter = valueCounter*-1;
+            valueCounter += getNumberOfMoves();
             moveValue += valueCounter;
         }
 
@@ -247,15 +248,26 @@ public class Board {
     }
 
     // Determine the number of possible moves a team will have
-    private double getNumberOfMoves(int queenNum){
-        int numMoves = 0;
-        for(Coordinate queenCurr: getQueenCoordinates(queenNum))
+    private double getNumberOfMoves(){
+        int whiteMoves = 0;
+        int blackMoves = 0;
+        for(Coordinate queenCurr: getQueenCoordinates(1))
             for (Coordinate queenMove : getReachableCoordinates(queenCurr)) {
                 for (Coordinate arrow : getReachableCoordinates(queenMove))
                     // Ensure the number of moves is heavily weighted
-                    numMoves+=2;
+                    whiteMoves++;
             }
-        return numMoves;
+        for(Coordinate queenCurr: getQueenCoordinates(2))
+            for (Coordinate queenMove : getReachableCoordinates(queenCurr)) {
+                for (Coordinate arrow : getReachableCoordinates(queenMove))
+                    // Ensure the number of moves is heavily weighted
+                    blackMoves++;
+            }
+        if(whiteMoves == 0)
+            return Double.NEGATIVE_INFINITY;
+        if(blackMoves == 0)
+            return Double.POSITIVE_INFINITY;
+        return 2*(whiteMoves-blackMoves);
     }
 
     // Determine the number of possible moves a team will have
@@ -302,17 +314,4 @@ public class Board {
         return arrowValue;
     }
 
-
-    // Deprecated test function
-    public double getRatioOurMovesToOpponentMoves(){
-        double blackMoves = countPossibleMoves(2);
-        double whiteMoves = countPossibleMoves(1);
-        if(blackMoves == 0){
-            return 5000;
-        }
-        if(whiteMoves == 0){
-            return -5000;
-        }
-        return Math.log(whiteMoves / blackMoves);
-    }
 }

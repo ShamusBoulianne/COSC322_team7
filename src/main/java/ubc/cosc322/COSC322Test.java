@@ -142,7 +142,6 @@ public class COSC322Test extends GamePlayer{
 
 	public void makeMove(){
     	GTNode root = new GTNode(board);
-    	//gametree.getRoot().getChildren().printList();
     	Move move = root.getChildren().getBestChild().getMoveToGetHere();
     	System.out.println("\n----------------------------------\n");
     	updateInternalGameState(move);
@@ -152,6 +151,7 @@ public class COSC322Test extends GamePlayer{
 				move.getQueenMove().getArrayList(),
 				move.getArrow().getArrayList()       );
 		System.out.println("The move sent to the server is:" + move.toString());
+		System.out.println("The heuristic of the move: " + root.getChildren().getBestChild().getHeuristic());
 		System.out.println("Move number " + moveNum++);
 		System.out.println("\n----------------------------------\n");
 	}
