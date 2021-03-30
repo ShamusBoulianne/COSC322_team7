@@ -3,8 +3,8 @@ package ubc.cosc322;
 import java.util.ArrayList;
 
 public class GTNode implements Comparable<GTNode>{
-    private final int maxDepth = 3;
-    private final int milliSecondsToFinish = 5*1000;
+    private final int maxDepth = 15;
+    private final int milliSecondsToFinish = 15*1000;
     private double finishTime;
     private double heuristic;
     private Board board;
