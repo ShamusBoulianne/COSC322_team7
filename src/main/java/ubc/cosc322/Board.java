@@ -234,17 +234,14 @@ public class Board {
         for (int team = 1; team<3;team++){
             // valueCounter checks the value of the board for each team individually
             // then adds it the total value
-            int valueCounter = 0;
-            if (valueCounter == 0)
-                valueCounter = -500;
+            double valueCounter = arrowAimingIntermediary(team);
             // Change the sign for the value of team 2 moves
             if (team == 2)
-                valueCounter = valueCounter*-1;
-            valueCounter += getNumberOfMoves();
+                valueCounter *=-1;
             moveValue += valueCounter;
         }
 
-        return moveValue;
+        return moveValue + getNumberOfMoves();
     }
 
     // Determine the number of possible moves a team will have

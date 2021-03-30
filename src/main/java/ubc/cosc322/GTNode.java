@@ -103,7 +103,7 @@ public class GTNode implements Comparable<GTNode>{
             else
                 return 1;
         else{
-            if(heuristic >= other.heuristic)
+            if(heuristic > other.heuristic)
                 return 1;
             else
                 return -1;

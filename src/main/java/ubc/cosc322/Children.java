@@ -29,13 +29,13 @@ public class Children {
         }
         else{
             if(isWhite) {
-                if (node.getHeuristic() > worstHeuristic) {
+                if (node.getHeuristic() < worstHeuristic) {
                     firstPass.pollFirst();
                     firstPass.add(node);
                     worstHeuristic = firstPass.first().getHeuristic();
                 }
             } else {
-                    if (node.getHeuristic() < bestHeruistic) {
+                    if (node.getHeuristic() > bestHeruistic) {
                         firstPass.pollFirst();
                         firstPass.add(node);
                         bestHeruistic = firstPass.first().getHeuristic();
@@ -50,19 +50,19 @@ public class Children {
     }
 
     public GTNode getBestChild(){
-        double bestFound = Double.NEGATIVE_INFINITY;
-        double worstFound = Double.POSITIVE_INFINITY;
+        double bestFound = Double.POSITIVE_INFINITY;
+        double worstFound = Double.NEGATIVE_INFINITY;
         for(GTNode node : this.firstPass)
             if(isWhite){
-                if(bestFound < node.getHeuristic()){
+                if(bestFound > node.getHeuristic()){
                     bestChild = node;
-                    bestHeruistic = node.getHeuristic();
+                    bestFound = node.getHeuristic();
                 }
             }
             else {
-                if (worstFound > node.getHeuristic()) {
+                if (worstFound < node.getHeuristic()) {
                     bestChild = node;
-                    worstHeuristic = node.getHeuristic();
+                    worstFound = node.getHeuristic();
                 }
             }
             return this.bestChild;
