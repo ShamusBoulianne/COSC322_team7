@@ -235,7 +235,7 @@ public class Board {
         // If the total value is positive,
         // the board favours team 1, if it's
         // negative the board favours team 2
-        for (int team = 1; team<3;team++){
+        //for (int team = 1; team<3;team++){
             // valueCounter checks the value of the board for each team individually
             // then adds it the total value
             int valueCounter = 0;
@@ -244,10 +244,10 @@ public class Board {
             if (valueCounter == 0)
                 valueCounter = -500;
             // Change the sign for the value of team 2 moves
-            if (team == 2)
-                valueCounter = valueCounter*-1;
+           // if (team == 2)
+             //   valueCounter = valueCounter*-1;
             moveValue += valueCounter;
-        }
+        //}
 
         return moveValue;
     }
