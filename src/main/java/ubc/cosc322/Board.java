@@ -231,17 +231,25 @@ public class Board {
         // The reasoning for the positive/negative decision is described in GTNode.java
         double moveValue = 0;
 
+        // Run the board value for both teams.
+        // If the total value is positive,
+        // the board favours team 1, if it's
+        // negative the board favours team 2
         for (int team = 1; team<3;team++){
             // valueCounter checks the value of the board for each team individually
             // then adds it the total value
-            double valueCounter = arrowAimingIntermediary(team);
+            int valueCounter = 0;
+            valueCounter += getNumberOfMoves();
+            // If there are no moves, heavily penalize this board
+            if (valueCounter == 0)
+                valueCounter = -500;
             // Change the sign for the value of team 2 moves
             if (team == 2)
-                valueCounter *=-1;
+                valueCounter = valueCounter*-1;
             moveValue += valueCounter;
         }
 
-        return moveValue + getNumberOfMoves();
+        return moveValue;
     }
 
     // Determine the number of possible moves a team will have
@@ -294,6 +302,7 @@ public class Board {
 
                     // Heavily penalize arrows next to a friendly queen
                     if (queenCheck == playerQueenNum) {
+                        arrowValue -= 10;
                     }
 
                     // Support arrows next to enemy
