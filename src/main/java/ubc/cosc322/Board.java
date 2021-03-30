@@ -236,12 +236,19 @@ public class Board {
             // then adds it the total value
             int valueCounter = 0;
             valueCounter += getNumberOfMoves(team);
-            valueCounter += arrowAimingIntermediary(team);
+            if (valueCounter == 0)
+                valueCounter = -500;
             // Change the sign for the value of team 2 moves
             if (team == 2)
                 valueCounter = valueCounter*-1;
             moveValue += valueCounter;
         }
+
+
+        if (playerQueenNum == 1)
+            moveValue += arrowAimingIntermediary(playerQueenNum);
+        else
+            moveValue -= arrowAimingIntermediary(playerQueenNum);
 
         return moveValue;
     }
@@ -295,6 +302,9 @@ public class Board {
                     // Support arrows next to enemy
                     else if (queenCheck != 0 && queenCheck != 3){
                         arrowValue += 0.5;
+                    }
+                    else{
+                        arrowValue += 0.1;
                     }
                 }
             }
