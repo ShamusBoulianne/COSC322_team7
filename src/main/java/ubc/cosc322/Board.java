@@ -71,6 +71,10 @@ public class Board {
         }
     }
 
+    private void setTile(Coordinate tile, int numToSetTo){
+        board[tile.getY()][tile.getX()] = numToSetTo;
+    }
+
     public ArrayList<Coordinate> getQueenCoordinates(int queenNum){
         ArrayList<Coordinate> pos = new ArrayList();
         for(int r=0; r< board.length; ++r)
@@ -196,108 +200,14 @@ public class Board {
     }
 
     public ArrayList<Coordinate> getReachableArrowCoordinates(Coordinate queenCurr, Coordinate queenPrev){
-        ArrayList<Coordinate> moves = new ArrayList<>();
-        //Straights
-        moves.addAll(getStraightLeftCoordinates(queenCurr, queenPrev));
-        moves.addAll(getStraightRightCoordinates(queenCurr, queenPrev));
-        moves.addAll(getStraightUpCoordinates(queenCurr, queenPrev));
-        moves.addAll(getStraightDownCoordinates(queenCurr, queenPrev));
-        //Diagonals
-        moves.addAll(getDownLeftCoordinates(queenCurr, queenPrev));
-        moves.addAll(getDownRightCoordinates(queenCurr, queenPrev));
-        moves.addAll(getUpLeftCoordinates(queenCurr, queenPrev));
-        moves.addAll(getUpRightCoordinates(queenCurr, queenPrev));
 
+        setTile(queenPrev, 0);
+        ArrayList<Coordinate> moves = getReachableCoordinates(queenCurr);
+        setTile(queenPrev, this.playerQueenNum);
         return moves;
     }
 
-    private ArrayList<Coordinate> getStraightLeftCoordinates(Coordinate queenPos, Coordinate queenPrev){
-        ArrayList<Coordinate> leftMoves = new ArrayList<>();
-        for(int newX=queenPos.getX()-1; newX>=0; --newX){
-            if(board[queenPos.getY()][newX] != 0 && newX != queenPrev.getX())
-                break;
-            leftMoves.add(new Coordinate(queenPos.getY(), newX));
-        }
-        return leftMoves;
-    }
 
-    private ArrayList<Coordinate> getStraightRightCoordinates(Coordinate queenPos, Coordinate queenPrev) {
-        ArrayList<Coordinate> rightMoves = new ArrayList<>();
-        for (int newX = queenPos.getX() + 1; newX < 10; ++newX) {
-            if (board[queenPos.getY()][newX] != 0 && newX != queenPrev.getX())
-                break;
-            rightMoves.add(new Coordinate(queenPos.getY(), newX));
-        }
-        return rightMoves;
-    }
-
-    private ArrayList<Coordinate> getStraightUpCoordinates(Coordinate queenPos, Coordinate queenPrev) {
-        ArrayList<Coordinate> upMoves = new ArrayList<>();
-        for (int newY = queenPos.getY() - 1; newY >= 0; --newY) {
-            if (board[newY][queenPos.getX()] != 0 && newY != queenPrev.getY())
-                break;
-            upMoves.add(new Coordinate(newY, queenPos.getX()));
-        }
-        return upMoves;
-    }
-
-    private ArrayList<Coordinate> getStraightDownCoordinates(Coordinate queenPos, Coordinate queenPrev) {
-        ArrayList<Coordinate> downMoves = new ArrayList<>();
-        for (int newY = queenPos.getY() + 1; newY < 10; ++newY) {
-            if (board[newY][queenPos.getX()] != 0 && newY != queenPrev.getY())
-                break;
-            downMoves.add(new Coordinate(newY, queenPos.getX()));
-        }
-        return downMoves;
-    }
-
-    private ArrayList<Coordinate> getDownLeftCoordinates(Coordinate queenPos, Coordinate queenPrev) {
-        ArrayList<Coordinate> downLeftMoves = new ArrayList<>();
-        for (int count = 1; count < 10; ++count) {
-            int newY = queenPos.getY()+count;
-            int newX = queenPos.getX()-count;
-            if (newY<0 || newY>9 || newX<0 || newX>9 || (board[newY][newX] != 0 && (newX != queenPrev.getX() && newY != queenPrev.getY())))
-                break;
-            downLeftMoves.add(new Coordinate(newY, newX));
-        }
-        return downLeftMoves;
-    }
-
-    private ArrayList<Coordinate> getDownRightCoordinates(Coordinate queenPos, Coordinate queenPrev) {
-        ArrayList<Coordinate> downRightMoves = new ArrayList<>();
-        for (int count = 1; count < 10; ++count) {
-            int newY = queenPos.getY()+count;
-            int newX = queenPos.getX()+count;
-            if (newY<0 || newY>9 || newX<0 || newX>9 || (board[newY][newX] != 0 && (newX != queenPrev.getX() && newY != queenPrev.getY())))
-                break;
-            downRightMoves.add(new Coordinate(newY, newX));
-        }
-        return downRightMoves;
-    }
-
-    private ArrayList<Coordinate> getUpLeftCoordinates(Coordinate queenPos, Coordinate queenPrev) {
-        ArrayList<Coordinate> upLeftMoves = new ArrayList<>();
-        for (int count = 1; count < 10; ++count) {
-            int newY = queenPos.getY()-count;
-            int newX = queenPos.getX()-count;
-            if (newY<0 || newY>9 || newX<0 || newX>9 || (board[newY][newX] != 0 && (newX != queenPrev.getX() && newY != queenPrev.getY())))
-                break;
-            upLeftMoves.add(new Coordinate(newY, newX));
-        }
-        return upLeftMoves;
-    }
-
-    private ArrayList<Coordinate> getUpRightCoordinates(Coordinate queenPos, Coordinate queenPrev) {
-        ArrayList<Coordinate> upRightMoves = new ArrayList<>();
-        for (int count = 1; count < 10; ++count) {
-            int newY = queenPos.getY()-count;
-            int newX = queenPos.getX()+count;
-            if (newY<0 || newY>9 || newX<0 || newX>9 || (board[newY][newX] != 0 && (newX != queenPrev.getX() && newY != queenPrev.getY())))
-                break;
-            upRightMoves.add(new Coordinate(newY, newX));
-        }
-        return upRightMoves;
-    }
 
     public ArrayList<Move> getPossibleMoves(){
         ArrayList<Move> moves = new ArrayList();

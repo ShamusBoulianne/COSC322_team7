@@ -85,7 +85,7 @@ public class COSC322Test extends GamePlayer{
 			board.setBoard((ArrayList)msgDetails.get(AmazonsGameMessage.GAME_STATE));
     		board.setPlayerQueenNum(1);// Set player num as our number
     		gamegui.setGameState((ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.GAME_STATE));
-    		//makeMove();
+    		makeMove();
     	}
     	if (GameMessage.GAME_ACTION_START.compareTo(messageType)==0) {
     		System.out.println("player-black: " + msgDetails.get(AmazonsGameMessage.PLAYER_BLACK));
