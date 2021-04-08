@@ -113,7 +113,7 @@ class Node {
     public Node(GTNode d)
     {
         gtNode = d;
-        data = gtNode.getHeuristic();
+        data = gtNode.getNodeHeuristic();
         next = null;
         prev = null;
     }

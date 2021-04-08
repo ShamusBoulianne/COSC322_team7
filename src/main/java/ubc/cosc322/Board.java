@@ -1,32 +1,37 @@
 package ubc.cosc322;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class Board {
-    private int[][] board;
+    private int[][] boardArray;
     private int playerQueenNum = 1;
+    private double heuristic;
 
-    public Board(ArrayList<Integer> boardList) {
-        setBoard(boardList);
-    }
     public Board(){
-        this.board = new int[10][10];
+        this.boardArray = new int[10][10];
+    }
+
+    public Board(Board prevBoard, Move moveToGetHere){
+        this();
+        this.setBoard(prevBoard.getBoardArray());
+        this.updateGameState(moveToGetHere);
+        this.setPlayerQueenNum(prevBoard.getPlayerQueenNum()%2+1);
+        calculateHeuristic();
     }
 
     public Board duplicateBoard(){
         Board outboard = new Board();
-        outboard.setBoard(this.getBoard());
+        outboard.setBoard(this.getBoardArray());
         outboard.setPlayerQueenNum(this.getPlayerQueenNum());
         return outboard;
     }
 
-    public void setBoard(ArrayList<Integer> boardList){
-        this.board = new int[10][10];
+    public void setBoardArray(ArrayList<Integer> boardList){
+        this.boardArray = new int[10][10];
         int row = 0;
         int column = 0;
         for (int i = 12; i < boardList.size(); i++) {
-            this.board[row][column] = boardList.get(i);
+            this.boardArray[row][column] = boardList.get(i);
             column = ++column % 10;
             if ((i + 1) % 11 == 0) {
                 ++i;
@@ -38,11 +43,11 @@ public class Board {
     public void setBoard(int[][] board){
         for(int y=0; y< board.length; ++y)
             for(int x=0; x<board[y].length; ++x)
-                this.board[y][x] = board[y][x];
+                this.boardArray[y][x] = board[y][x];
     }
 
-    public int[][] getBoard(){
-        return this.board;
+    public int[][] getBoardArray(){
+        return this.boardArray;
     }
 
     public int getPlayerQueenNum(){
@@ -53,49 +58,38 @@ public class Board {
         this.playerQueenNum = num;
     }
 
+    public double getHeuristic(){
+        return this.heuristic;
+    }
+
     public void printBoard(){
         String output = "";
-        for(int r = 0; r< this.board.length; ++r){
-            for(int c = 0; c<this.board[r].length; ++c)
-                output += this.board[r][c] + " ";
+        for(int r = 0; r< this.boardArray.length; ++r){
+            for(int c = 0; c<this.boardArray[r].length; ++c)
+                output += this.boardArray[r][c] + " ";
             output += "\n";
         }
         System.out.println(output);
         System.out.println();
     }
 
-    public void printMoves(){
-        ArrayList<Move> moves = getPossibleMoves();
-        for(Move i: moves){
-            System.out.print(i.toString());
-        }
+    private void setTile(Coordinate tile, int numToSetTo){
+        boardArray[tile.getY()][tile.getX()] = numToSetTo;
     }
 
-    private void setTile(Coordinate tile, int numToSetTo){
-        board[tile.getY()][tile.getX()] = numToSetTo;
-    }
+    private int getTile(Coordinate tile){return boardArray[tile.getY()][tile.getX()];}
 
     public ArrayList<Coordinate> getQueenCoordinates(int queenNum){
         ArrayList<Coordinate> pos = new ArrayList();
-        for(int r=0; r< board.length; ++r)
-            for(int c=0; c<board[r].length; ++c)
-                if(board[r][c] == queenNum){
+        for(int r = 0; r< boardArray.length; ++r)
+            for(int c = 0; c< boardArray[r].length; ++c)
+                if(boardArray[r][c] == queenNum){
                     pos.add(new Coordinate(r, c));
                 }
         return pos;
     }
 
-    public ArrayList<Coordinate> getArrowCoordinates(){
-        ArrayList<Coordinate> pos = new ArrayList();
-        for(int r=0; r< board.length; ++r)
-            for(int c=0; c<board[r].length; ++c)
-                if(board[r][c] == 3){
-                    pos.add(new Coordinate(r, c));
-                }
-        return pos;
-    }
-
-    public ArrayList<Coordinate> getReachableCoordinates(Coordinate queenCurr){
+    private ArrayList<Coordinate> getReachableCoordinates(Coordinate queenCurr){
         ArrayList<Coordinate> moves = new ArrayList<>();
         //Straights
         moves.addAll(getStraightLeftCoordinates(queenCurr));
@@ -114,7 +108,7 @@ public class Board {
     private ArrayList<Coordinate> getStraightLeftCoordinates(Coordinate queenPos){
         ArrayList<Coordinate> leftMoves = new ArrayList<>();
         for(int newX=queenPos.getX()-1; newX>=0; --newX){
-            if(board[queenPos.getY()][newX] != 0)
+            if(boardArray[queenPos.getY()][newX] != 0)
                 break;
             leftMoves.add(new Coordinate(queenPos.getY(), newX));
         }
@@ -124,7 +118,7 @@ public class Board {
     private ArrayList<Coordinate> getStraightRightCoordinates(Coordinate queenPos) {
         ArrayList<Coordinate> rightMoves = new ArrayList<>();
         for (int newX = queenPos.getX() + 1; newX < 10; ++newX) {
-            if (board[queenPos.getY()][newX] != 0)
+            if (boardArray[queenPos.getY()][newX] != 0)
                 break;
             rightMoves.add(new Coordinate(queenPos.getY(), newX));
         }
@@ -134,7 +128,7 @@ public class Board {
     private ArrayList<Coordinate> getStraightUpCoordinates(Coordinate queenPos) {
         ArrayList<Coordinate> upMoves = new ArrayList<>();
         for (int newY = queenPos.getY() - 1; newY >= 0; --newY) {
-            if (board[newY][queenPos.getX()] != 0)
+            if (boardArray[newY][queenPos.getX()] != 0)
                 break;
             upMoves.add(new Coordinate(newY, queenPos.getX()));
         }
@@ -144,7 +138,7 @@ public class Board {
     private ArrayList<Coordinate> getStraightDownCoordinates(Coordinate queenPos) {
         ArrayList<Coordinate> downMoves = new ArrayList<>();
         for (int newY = queenPos.getY() + 1; newY < 10; ++newY) {
-            if (board[newY][queenPos.getX()] != 0)
+            if (boardArray[newY][queenPos.getX()] != 0)
                 break;
             downMoves.add(new Coordinate(newY, queenPos.getX()));
         }
@@ -156,7 +150,7 @@ public class Board {
         for (int count = 1; count < 10; ++count) {
             int newY = queenPos.getY()+count;
             int newX = queenPos.getX()-count;
-            if (newY<0 || newY>9 || newX<0 || newX>9 || board[newY][newX] != 0)
+            if (newY<0 || newY>9 || newX<0 || newX>9 || boardArray[newY][newX] != 0)
                 break;
             downLeftMoves.add(new Coordinate(newY, newX));
         }
@@ -168,7 +162,7 @@ public class Board {
         for (int count = 1; count < 10; ++count) {
             int newY = queenPos.getY()+count;
             int newX = queenPos.getX()+count;
-            if (newY<0 || newY>9 || newX<0 || newX>9 || board[newY][newX] != 0)
+            if (newY<0 || newY>9 || newX<0 || newX>9 || boardArray[newY][newX] != 0)
                 break;
             downRightMoves.add(new Coordinate(newY, newX));
         }
@@ -180,7 +174,7 @@ public class Board {
         for (int count = 1; count < 10; ++count) {
             int newY = queenPos.getY()-count;
             int newX = queenPos.getX()-count;
-            if (newY<0 || newY>9 || newX<0 || newX>9 || board[newY][newX] != 0)
+            if (newY<0 || newY>9 || newX<0 || newX>9 || boardArray[newY][newX] != 0)
                 break;
             upLeftMoves.add(new Coordinate(newY, newX));
         }
@@ -192,22 +186,20 @@ public class Board {
         for (int count = 1; count < 10; ++count) {
             int newY = queenPos.getY()-count;
             int newX = queenPos.getX()+count;
-            if (newY<0 || newY>9 || newX<0 || newX>9 || board[newY][newX] != 0)
+            if (newY<0 || newY>9 || newX<0 || newX>9 || boardArray[newY][newX] != 0)
                 break;
             upRightMoves.add(new Coordinate(newY, newX));
         }
         return upRightMoves;
     }
 
-    public ArrayList<Coordinate> getReachableArrowCoordinates(Coordinate queenCurr, Coordinate queenPrev){
-
-        setTile(queenPrev, 0);
-        ArrayList<Coordinate> moves = getReachableCoordinates(queenCurr);
-        setTile(queenPrev, this.playerQueenNum);
+    private ArrayList<Coordinate> getReachableArrowCoordinates(Coordinate queenMove, Coordinate queenCurr){
+        int temp = getTile(queenCurr);
+        setTile(queenCurr, 0);
+        ArrayList<Coordinate> moves = getReachableCoordinates(queenMove);
+        setTile(queenCurr, temp);
         return moves;
     }
-
-
 
     public ArrayList<Move> getPossibleMoves(){
         ArrayList<Move> moves = new ArrayList();
@@ -220,126 +212,39 @@ public class Board {
         return moves;
     }
 
-    // Deprecated test function
-    public int countPossibleMoves(int queenNum){
+    private int countPossibleMoves(int queenNum){
         int count = 0;
         for(Coordinate queenCurr: getQueenCoordinates(queenNum))
             for (Coordinate queenMove : getReachableCoordinates(queenCurr)) {
-                for (Coordinate arrow : getReachableCoordinates(queenMove))
+                for (Coordinate arrow : getReachableArrowCoordinates(queenMove, queenCurr))
                     ++count;
             }
         return count;
     }
 
     public void updateGameState(Move move){
-        board[move.getQueenCurr().getY()][move.getQueenCurr().getX()] = 0;
-        board[move.getQueenMove().getY()][move.getQueenMove().getX()]= this.playerQueenNum;
-        board[move.getArrow().getY()][move.getArrow().getX()] = 3;
+        boardArray[move.getQueenCurr().getY()][move.getQueenCurr().getX()] = 0;
+        boardArray[move.getQueenMove().getY()][move.getQueenMove().getX()]= this.playerQueenNum;
+        boardArray[move.getArrow().getY()][move.getArrow().getX()] = 3;
     }
 
-    // NOTE: Consider moving heuristic calculations to its own class
-
-    public double getHeuristic(){
-        // Total value of the board
-        // Positive is good for player 1, negative is good for player 2
-        // The reasoning for the positive/negative decision is described in GTNode.java
-        double moveValue = 0;
-
-        // Run the board value for both teams.
-        // If the total value is positive,
-        // the board favours team 1, if it's
-        // negative the board favours team 2
-        //for (int team = 1; team<3;team++){
-            // valueCounter checks the value of the board for each team individually
-            // then adds it the total value
-            int valueCounter = 0;
-            valueCounter += getNumberOfMoves();
-            // If there are no moves, heavily penalize this board
-            //if (valueCounter == 0)
-              //  valueCounter = -500;
-            // Change the sign for the value of team 2 moves
-           // if (team == 2)
-             //   valueCounter = valueCounter*-1;
-            moveValue += valueCounter;
-        //}
-
-        return moveValue;
+    public void calculateHeuristic(){
+        // Estimate of value of the board, + is good for white, - is good for black. Infinity means there are no more moves
+        this.heuristic = getMoveDifference();
     }
 
-    // Determine the number of possible moves a team will have
-    private double getNumberOfMoves() {
-        int whiteMoves = 0;
-        int blackMoves = 0;
-        for (Coordinate queenCurr : getQueenCoordinates(1))
-            for (Coordinate queenMove : getReachableCoordinates(queenCurr)) {
-                for (Coordinate arrow : getReachableArrowCoordinates(queenMove, queenCurr))
-                    // Ensure the number of moves is heavily weighted
-                    whiteMoves++;
-            }
-        for (Coordinate queenCurr : getQueenCoordinates(2))
-            for (Coordinate queenMove : getReachableCoordinates(queenCurr)) {
-                for (Coordinate arrow : getReachableArrowCoordinates(queenMove, queenCurr))
-                    // Ensure the number of moves is heavily weighted
-                    blackMoves++;
-            }
-        return 2 * (whiteMoves - blackMoves);
+    private double getMoveDifference() {
+        // The difference in the number of moves between the teams
+        int whiteMoves = countPossibleMoves(1);
+        int blackMoves = countPossibleMoves(2);
+
+        //Return infinity if a team has won
+        if(whiteMoves == 0)
+            return Double.NEGATIVE_INFINITY;
+        if(blackMoves == 0)
+            return Double.POSITIVE_INFINITY;
+
+        return countPossibleMoves(1)-countPossibleMoves(2);
     }
 
-    // Determine the number of possible moves a team will have
-    private double arrowAimingIntermediary(int queenNum){
-        int arrowValues = 0;
-        for (Coordinate arrow : getArrowCoordinates())
-            arrowValues += arrowAiming(arrow, queenNum);
-        return arrowValues;
-    }
-
-    // Method for determining value of an arrow placement
-    // Previously checked what team the nearest queen was,
-    // will now check what queen an arrow is near
-    private double arrowAiming(Coordinate arrowPos, int playerQueenNum){
-        double arrowValue = 0;
-
-        // Run through all Y rows
-        for (int y = 0; y<10; y++){
-            // Run through all X columns
-            for (int x = 0; x<10; x++){
-                // Check if any queen is on the space, the computer will then determine if that's good or bad
-                if ((board[y][x] == 1 || board[y][x] == 2) &&
-                        ((x == arrowPos.getX()-1 || x == arrowPos.getX()+1 || x == arrowPos.getX()) &&
-                        (y == arrowPos.getY()-1 || y == arrowPos.getY()+1 || y == arrowPos.getY()))){
-                    // Ignore space the arrow is on
-                    if(x == arrowPos.getX() && y == arrowPos.getY())
-                        continue;
-
-                    // Determine which team is on the space
-                    int queenCheck = board[y][x];
-
-                    // Heavily penalize arrows next to a friendly queen
-                    if (queenCheck == playerQueenNum) {
-                        arrowValue -= 10;
-                    }
-
-                    // Support arrows next to enemy
-                    else if (queenCheck != 0 && queenCheck != 3){
-                        arrowValue += 0.1;
-                    }
-                }
-            }
-        }
-        return arrowValue;
-    }
-
-
-    // Deprecated test function
-    public double getRatioOurMovesToOpponentMoves(){
-        double blackMoves = countPossibleMoves(2);
-        double whiteMoves = countPossibleMoves(1);
-        if(blackMoves == 0){
-            return 5000;
-        }
-        if(whiteMoves == 0){
-            return -5000;
-        }
-        return Math.log(whiteMoves / blackMoves);
-    }
 }

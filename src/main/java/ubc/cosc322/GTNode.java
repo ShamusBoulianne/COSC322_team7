@@ -3,10 +3,10 @@ package ubc.cosc322;
 import java.util.ArrayList;
 
 public class GTNode implements Comparable<GTNode>{
-    private final int maxDepth = 15;
+    private final int maxDepth = 11;
     private final int milliSecondsToFinish = 15*1000;
     private double finishTime;
-    private double heuristic;
+    private double nodeHeuristic;
     private Board board;
     private Move moveToGetHere;
     private GTNode parent;
@@ -20,11 +20,11 @@ public class GTNode implements Comparable<GTNode>{
         this.playerQueenNum = ((this.parent.getBoard().getPlayerQueenNum()) %2) +1;
         this.finishTime = this.parent.finishTime;
 
-        makeBoard();
-        this.board.updateGameState(moveToGetHere);
-        this.board.setPlayerQueenNum(this.playerQueenNum);
+        if(this.board == null){
+            board = new Board(parent.getBoard(), moveToGetHere);
+        }
 
-        this.heuristic = this.board.getHeuristic();
+        this.nodeHeuristic = this.board.getHeuristic();
         this.depth = this.parent.getDepth() + 1;
         
         //System.out.println(this.toString());
@@ -35,23 +35,14 @@ public class GTNode implements Comparable<GTNode>{
         this.finishTime = milliSecondsToFinish + System.currentTimeMillis();
 
         this.board = new Board();
-        this.board.setBoard(board.getBoard());
+        this.board.setBoard(board.getBoardArray());
         this.board.setPlayerQueenNum(board.getPlayerQueenNum());
         this.depth = 0;
         this.playerQueenNum = this.board.getPlayerQueenNum();
         updateHeuristic();
     }
 
-    public void makeBoard(){
-        if(this.board == null) {
-            this.board = this.parent.getBoard().duplicateBoard();
-            this.board.updateGameState(this.moveToGetHere);
-            this.board.setPlayerQueenNum(this.playerQueenNum);
-        }
-
-    }
-
-    public double getHeuristic(){ return heuristic;}
+    public double getNodeHeuristic(){ return nodeHeuristic;}
 
     public Board getBoard() {
         return board;
@@ -71,9 +62,7 @@ public class GTNode implements Comparable<GTNode>{
 
     private void updateHeuristic(){
         if(this.depth < maxDepth){
-            if(this.heuristic == Double.POSITIVE_INFINITY)
-                return;
-            if(this.heuristic == Double.NEGATIVE_INFINITY)
+            if(this.nodeHeuristic == Double.POSITIVE_INFINITY || this.nodeHeuristic == Double.NEGATIVE_INFINITY)
                 return;
             this.children = new Children(this.playerQueenNum != 1);
             ArrayList<Move> makeableMoves = this.board.getPossibleMoves();
@@ -88,32 +77,19 @@ public class GTNode implements Comparable<GTNode>{
                         break;
                     node.updateHeuristic();
                 }
-                this.heuristic = this.children.getBestChild().getHeuristic();
-            }catch (NullPointerException e){
-                System.out.print("Null pointer caught in updateHeuristic");
-            }
-
+                this.nodeHeuristic = this.children.getBestChild().getNodeHeuristic();
+            }catch (NullPointerException e){}
         }
     }
 
     public int compareTo(GTNode other){
-        if(playerQueenNum == 1)
-            if(heuristic > other.heuristic)
-                return -1;
-            else
-                return 1;
-        else{
-            if(heuristic > other.heuristic)
-                return 1;
-            else
-                return -1;
-        }
+        return (this.nodeHeuristic < other.nodeHeuristic)? -1:1;
     }
 
     public String toString(){
         if(moveToGetHere == null)
             return "Root node";
-        return "Node created: Depth:" + this.getDepth() + "  Move to get here:" + this.moveToGetHere.toString() + "  Heuristic:" + this.getHeuristic();
+        return "Node created: Depth:" + this.getDepth() + "  Move to get here:" + this.moveToGetHere.toString() + "  Heuristic:" + this.getNodeHeuristic();
     }
 
 }

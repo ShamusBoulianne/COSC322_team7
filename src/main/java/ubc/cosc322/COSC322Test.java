@@ -2,14 +2,11 @@
 // We had a group member drop the course on march 8th,
 package ubc.cosc322;
 
-import java.util.concurrent.TimeUnit;
 import java.util.ArrayList;
 import java.util.Map;
 
-import sfs2x.client.entities.Room;
 import ygraph.ai.smartfox.games.*;
 import ygraph.ai.smartfox.games.amazons.AmazonsGameMessage;
-import ygraph.ai.smartfox.games.amazons.HumanPlayer;
 
 /**
  * An example illustrating how to implement a GamePlayer
@@ -60,7 +57,7 @@ public class COSC322Test extends GamePlayer{
     	this.passwd = passwd;
 
     	this.gamegui = new BaseGameGUI(this);
-	board = new Board();
+		board = new Board();
 }
 
 
@@ -82,8 +79,8 @@ public class COSC322Test extends GamePlayer{
     	//see the method GamePlayer.handleGameMessage() in the game-client-api document.
 
     	if (GameMessage.GAME_STATE_BOARD.compareTo(messageType)==0) {
-			board.setBoard((ArrayList)msgDetails.get(AmazonsGameMessage.GAME_STATE));
-    		board.setPlayerQueenNum(1);// Set player num as our number
+			board.setBoardArray((ArrayList)msgDetails.get(AmazonsGameMessage.GAME_STATE));
+    		board.setPlayerQueenNum(2);// Set player num as our number
     		gamegui.setGameState((ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.GAME_STATE));
     		makeMove();
     	}
@@ -151,7 +148,7 @@ public class COSC322Test extends GamePlayer{
 				move.getQueenMove().getArrayList(),
 				move.getArrow().getArrayList()       );
 		System.out.println("The move sent to the server is:" + move.toString());
-		System.out.println("The heuristic of the move: " + root.getChildren().getBestChild().getHeuristic());
+		System.out.println("The heuristic of the move: " + root.getChildren().getBestChild().getNodeHeuristic());
 		System.out.println("Move number " + moveNum++);
 		System.out.println("\n----------------------------------\n");
 	}
