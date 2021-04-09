@@ -48,7 +48,7 @@ public class Children {
     }
 
     public GTNode getBestChild(){
-        if(isWhite)
+        if(!isWhite)
             getLowestChild();
         else
             getHighestChild();
