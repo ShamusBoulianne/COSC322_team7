@@ -244,7 +244,7 @@ public class Board {
         if(blackMoves == 0)
             return Double.POSITIVE_INFINITY;
 
-        return countPossibleMoves(1)-countPossibleMoves(2);
+        return Math.log(countPossibleMoves(1)/countPossibleMoves(2));
     }
 
 }

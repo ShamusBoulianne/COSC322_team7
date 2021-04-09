@@ -32,7 +32,7 @@ public class COSC322Test extends GamePlayer{
      * @param args for name and passwd (current, any string would work)
      */
     public static void main(String[] args) {				 
-    	GamePlayer player = new COSC322Test("Team07", "pass");
+    	GamePlayer player = new COSC322Test("Ryan", "pass");
     	
     	if(player.getGameGUI() == null) {
     		player.Go();
@@ -82,7 +82,7 @@ public class COSC322Test extends GamePlayer{
 			board.setBoardArray((ArrayList)msgDetails.get(AmazonsGameMessage.GAME_STATE));
     		board.setPlayerQueenNum(2);// Set player num as our number
     		gamegui.setGameState((ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.GAME_STATE));
-    		makeMove();
+    		//makeMove();
     	}
     	if (GameMessage.GAME_ACTION_START.compareTo(messageType)==0) {
     		System.out.println("player-black: " + msgDetails.get(AmazonsGameMessage.PLAYER_BLACK));
